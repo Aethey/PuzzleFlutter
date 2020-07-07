@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "636467496383",
+    "firebase_url": "https://photopuzzle-ryu.firebaseio.com",
+    "project_id": "photopuzzle-ryu",
+    "storage_bucket": "photopuzzle-ryu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636467496383:android:91ceeaefee6b8560174d0a",
+        "android_client_info": {
+          "package_name": "com.ly.android.photopuzzle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636467496383-h8klvepsrjdmo59l1iof4k7gadq0qm3r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ly.android.photopuzzle",
+            "certificate_hash": "9f1962db87ada258e75c3a75d33afa061e39ed31"
+          }
+        },
+        {
+          "client_id": "636467496383-hlv578cvtnmilka89201i22u59p1vjpd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtEA-Fs_pN9gW4eN26Ja-8e81_0-rOcXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636467496383-hlv578cvtnmilka89201i22u59p1vjpd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "636467496383-nsffnugkl0ae89b9af9p91pblgmdd3ac.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ly.photopuzzle"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
