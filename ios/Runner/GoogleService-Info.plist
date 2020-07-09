@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>636467496383-nsffnugkl0ae89b9af9p91pblgmdd3ac.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.636467496383-nsffnugkl0ae89b9af9p91pblgmdd3ac</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDHWSwuuzNp7M4dXkvHpAUy3BrnfBbEvSw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>636467496383</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ly.photopuzzle</string>
+	<key>PROJECT_ID</key>
+	<string>photopuzzle-ryu</string>
+	<key>STORAGE_BUCKET</key>
+	<string>photopuzzle-ryu.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:636467496383:ios:0c8d70d679920f86174d0a</string>
+	<key>DATABASE_URL</key>
+	<string>https://photopuzzle-ryu.firebaseio.com</string>
+</dict>
+</plist>
