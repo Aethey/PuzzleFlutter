@@ -40,9 +40,15 @@ dependencies:
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
   firebase_auth: ^0.16.1
-  cloud_firestore: ^0.13.3
+  # https://pub.dev/packages/cloud_firestore#-installing-tab-
+  cloud_firestore: ^0.13.7
   google_sign_in: ^4.1.4
-
+  # https://pub.flutter-io.cn/packages/image_picker#-installing-tab-
+  image_picker: ^0.6.7+4
+  # https://pub.dev/packages/flutter_image_compress#why-dont-you-use-dart-to-do-it
+  flutter_image_compress: ^0.7.0
+  # https://pub.dev/packages/random_string#-installing-tab-
+  random_string: ^2.1.0
 
 dev_dependencies:
   flutter_test:

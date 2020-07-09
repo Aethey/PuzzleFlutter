@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui show instantiateImageCodec, Codec, Image;
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:photopuzzle/cloud/cloud_manager.dart';
 
 import 'image_node.dart';
 
@@ -32,13 +36,36 @@ class PuzzleUtil {
   }
 
   Future<ui.Image> getImage(String path) async {
-    Uint8List bytes = File(path).readAsBytesSync();
+    File file = File(path);
+
+    Uint8List bytes = await compressFile(file);
+
+    String b64 = base64Encode(bytes);
+
+    Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(
+        DateTime.now().millisecondsSinceEpoch);
+
+    Map<String, dynamic> map = Map();
+    map['b64'] = b64;
+    map['time'] = timestamp;
+    CloudManager.instance.setDataToFirebase(map);
+
 //    ByteData data = await rootBundle.load(path);
 //    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
     ui.Codec codec = await ui.instantiateImageCodec(bytes);
     FrameInfo frameInfo = await codec.getNextFrame();
     image = frameInfo.image;
     return image;
+  }
+
+  Future<Uint8List> compressFile(File file) async {
+    var result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      quality: 50,
+    );
+    print(file.lengthSync());
+    print(result.length);
+    return result;
   }
 
   List<ImageNode> doTask() {
