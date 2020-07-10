@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:photopuzzle/common/route_name.dart';
+import 'package:photopuzzle/home.dart';
+import 'package:photopuzzle/route/scale_route.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,6 +29,7 @@ class LoginState extends State<LoginPage> {
         child: Center(
           child: RaisedButton(
             onPressed: () {
+              EasyLoading.show(status: 'loading...');
               _handleLogin();
             },
             child: Container(
@@ -59,7 +62,7 @@ class LoginState extends State<LoginPage> {
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
-    Navigator.pushNamed(context, RouteName.Home);
+    Navigator.push(context, ScaleRoute(page: HomePage()));
     return user;
   }
 }

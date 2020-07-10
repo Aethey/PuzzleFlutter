@@ -4,11 +4,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui show instantiateImageCodec, Codec, Image;
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:photopuzzle/cloud/cloud_manager.dart';
 
 import 'image_node.dart';
 
@@ -48,7 +46,9 @@ class PuzzleUtil {
     Map<String, dynamic> map = Map();
     map['b64'] = b64;
     map['time'] = timestamp;
-    CloudManager.instance.setDataToFirebase(map);
+
+    ///todo(ryu) 7.9  test
+//    CloudManager.instance.setDataToFirebase(map);
 
 //    ByteData data = await rootBundle.load(path);
 //    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());

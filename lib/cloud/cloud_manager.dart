@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:random_string/random_string.dart';
-import 'dart:math' show Random;
 
 class CloudManager {
   factory CloudManager() => _getInstance();
@@ -18,12 +18,24 @@ class CloudManager {
     return _instance;
   }
 
-  Future<Map<String, dynamic>> getDataFromCloud() async {
-    DocumentSnapshot dc =
-        await Firestore.instance.collection("images").document("user001").get();
-    Map<String, dynamic> data = dc.data;
+  Future<Map<String, dynamic>> getPuzzleFromCloud(
+      String collectionID, String documentID) async {
+    DocumentSnapshot dc = await Firestore.instance
+        .collection(collectionID)
+        .document(documentID)
+        .get();
+    EasyLoading.dismiss();
 
     return dc.data;
+  }
+
+  // realtime
+  Stream<DocumentSnapshot> getPuzzleFromCloudRealTime(
+      String collectionID, String documentID) {
+    return Firestore.instance
+        .collection(collectionID)
+        .document(documentID)
+        .snapshots();
   }
 
   void setDataToFirebase(Map<String, dynamic> map) {

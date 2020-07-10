@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photopuzzle/camera/camera_main_page.dart';
 import 'package:photopuzzle/cloud/cloud_manager.dart';
+import 'package:photopuzzle/database/database_helper.dart';
+import 'package:photopuzzle/database/puzzle_mock_model.dart';
+import 'package:photopuzzle/home/grid_item_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +18,16 @@ class HomePage extends StatefulWidget {
 }
 
 class HomeState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -30,18 +40,25 @@ class HomeState extends State<HomePage> {
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 2 / 3,
-            child: FutureBuilder(
-              future: CloudManager.instance.getDataFromCloud(),
+            child: FutureBuilder<Map<String, dynamic>>(
+              future:
+                  CloudManager.instance.getPuzzleFromCloud('images', 'user001'),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
-                    return Container();
+                    return Container(
+                      child: Text('NONE'),
+                    );
                     break;
                   case ConnectionState.waiting:
-                    return Container();
+                    return Container(
+                      child: Text('WAITING'),
+                    );
                     break;
                   case ConnectionState.active:
-                    return Container();
+                    return Container(
+                      child: Text('ACTIVE'),
+                    );
                     break;
                   case ConnectionState.done:
                     return _buildGridView(snapshot.data);
@@ -58,8 +75,10 @@ class HomeState extends State<HomePage> {
               child: RaisedButton(
                 onPressed: () {
 //              getImage();
-                  getCamera();
+//                  getCamera();
 //                  CloudManager.instance.getDataFromCloud();
+
+                  testDatabase();
                 },
                 child: Container(
                   color: Colors.orange,
@@ -88,7 +107,9 @@ class HomeState extends State<HomePage> {
               children: [
                 Text((map[key]['time'] as Timestamp).toDate().day.toString()),
                 Container(
-                  child: _buildImageView(map[key]['b64']),
+                  child: GridItemWidget(
+                    b64: map[key]['b64'],
+                  ),
                 )
               ],
             ),
@@ -99,13 +120,13 @@ class HomeState extends State<HomePage> {
     );
   }
 
-  Widget _buildImageView(String b64) {
-    Uint8List bytes = Base64Decoder().convert(b64);
-    return Container(
-      height: 50,
-      width: 50,
-      child: Image.memory(bytes),
-    );
+  void testDatabase() async {
+    var db = DatabaseHelper();
+
+    PuzzleMockModel model = PuzzleMockModel(123, 'testtt');
+
+    await db.insertPUzzleMockData(model);
+    db.getPuzzleMockModel(1);
   }
 
   Future<void> getCamera() async {
