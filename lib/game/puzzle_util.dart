@@ -20,42 +20,34 @@ class PuzzleUtil {
   int level;
   double eachBitmapWidth;
 
-  Future<ui.Image> init(String path, Size size, int level) async {
-    await getImage(path);
+  Future<ui.Image> init(Uint8List bytes, Size size, int level) async {
+    image = await getImage(bytes);
 
     screenSize = size;
     this.level = level;
     eachWidth = screenSize.width * 0.8 / level;
     baseX = screenSize.width * 0.1;
-    baseY = (screenSize.height - screenSize.width) * 0.5;
+    baseY = (screenSize.height - screenSize.width) * 0.1;
 
     eachBitmapWidth = (image.width / level);
     return image;
   }
 
-  Future<ui.Image> getImage(String path) async {
-    File file = File(path);
-
-    Uint8List bytes = await compressFile(file);
-
-    String b64 = base64Encode(bytes);
-
-    Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(
-        DateTime.now().millisecondsSinceEpoch);
-
-    Map<String, dynamic> map = Map();
-    map['b64'] = b64;
-    map['time'] = timestamp;
-
+  Future<ui.Image> getImage(Uint8List bytes) async {
     ///todo(ryu) 7.9  test
+//    String b64 = base64Encode(bytes);
+//    Map<String, dynamic> map = Map();
+//    map['b64'] = b64;
+//    map['time'] = timestamp;
+//    Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(
+//        DateTime.now().millisecondsSinceEpoch);
 //    CloudManager.instance.setDataToFirebase(map);
-
 //    ByteData data = await rootBundle.load(path);
 //    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+
     ui.Codec codec = await ui.instantiateImageCodec(bytes);
     FrameInfo frameInfo = await codec.getNextFrame();
-    image = frameInfo.image;
-    return image;
+    return frameInfo.image;
   }
 
   Future<Uint8List> compressFile(File file) async {

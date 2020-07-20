@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:photopuzzle/game_page.dart';
+import 'package:photopuzzle/utils/image_util.dart';
 
 class DisplayPicturePage extends StatelessWidget {
   final String imagePath;
@@ -23,11 +26,7 @@ class DisplayPicturePage extends StatelessWidget {
           Container(
             child: RaisedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GamePage(
-                            MediaQuery.of(context).size, imagePath, 3)));
+                startGame(context, imagePath);
               },
               child: Container(
                 child: Text(''),
@@ -37,5 +36,15 @@ class DisplayPicturePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> startGame(BuildContext context, String imagePath) async {
+    Uint8List bytes = await ImageUtil.pathToImage(imagePath);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                GamePage(MediaQuery.of(context).size, bytes, 3)));
   }
 }

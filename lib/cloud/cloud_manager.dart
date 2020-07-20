@@ -20,6 +20,7 @@ class CloudManager {
 
   Future<Map<String, dynamic>> getPuzzleFromCloud(
       String collectionID, String documentID) async {
+    print('getPuzzleFromCloud');
     DocumentSnapshot dc = await Firestore.instance
         .collection(collectionID)
         .document(documentID)

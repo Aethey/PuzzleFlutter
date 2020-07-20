@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,16 +8,17 @@ import 'package:photopuzzle/game/game_engine.dart';
 import 'package:photopuzzle/game/game_painter.dart';
 import 'package:photopuzzle/game/image_node.dart';
 import 'package:photopuzzle/game/puzzle_util.dart';
+import 'package:vibrate/vibrate.dart';
 
 class GameWidget extends StatefulWidget {
   final Size size;
-  final String imgPath;
+  final Uint8List bytes;
   final int level;
-  GameWidget(this.size, this.imgPath, this.level);
+  GameWidget(this.size, this.bytes, this.level);
 
   @override
   State<StatefulWidget> createState() {
-    return GameWidgetState(size, imgPath, level);
+    return GameWidgetState(size, bytes, level);
   }
 }
 
@@ -31,7 +33,7 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
   Map<int, ImageNode> nodeMap = Map();
 
   int level;
-  String path;
+  Uint8List bytes;
   ImageNode hitNode;
 
   double downX, downY, newX, newY;
@@ -42,11 +44,11 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
 
   GameState gameState = GameState.loading;
 
-  GameWidgetState(this.size, this.path, this.level) {
+  GameWidgetState(this.size, this.bytes, this.level) {
     puzzleUtil = PuzzleUtil();
     emptyIndex = level * level - 1;
 
-    puzzleUtil.init(path, size, level).then((val) {
+    puzzleUtil.init(bytes, size, level).then((val) {
       setState(() {
         nodes = puzzleUtil.doTask();
         GameEngine.makeRandom(nodes);
@@ -147,7 +149,7 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
     if (controller != null && controller.isAnimating) {
       return;
     }
-
+    Vibrate.feedback(FeedbackType.heavy);
     needdraw = true;
     RenderBox referenceBox = context.findRenderObject();
     Offset localPosition = referenceBox.globalToLocal(details.globalPosition);

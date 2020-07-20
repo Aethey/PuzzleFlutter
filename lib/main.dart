@@ -5,9 +5,19 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:photopuzzle/common/route_name.dart';
 import 'package:photopuzzle/firebase/login_page.dart';
 import 'package:photopuzzle/home.dart';
+import 'package:photopuzzle/main_page.dart';
+import 'package:photopuzzle/provider/model/camera_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => CameraProviderModel(),
+      )
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,15 +27,23 @@ class MyApp extends StatelessWidget {
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
 
+  void initApp(BuildContext context) {
+    /// initCamera
+    Provider.of<CameraProviderModel>(context, listen: false).initCamera();
+  }
+
   @override
   Widget build(BuildContext context) {
+    /// init
+    initApp(context);
     return FlutterEasyLoading(
       child: MaterialApp(
         title: 'Photo Puzzle',
-        initialRoute: RouteName.Login,
+        initialRoute: RouteName.Main,
         routes: {
-          RouteName.Home: (context) => HomePage(),
+//          RouteName.Home: (context) => HomePage(),
           RouteName.Login: (context) => LoginPage(),
+          RouteName.Main: (context) => MainPage(),
         },
         theme: ThemeData(
           // This is the theme of your application.
