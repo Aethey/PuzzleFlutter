@@ -6,6 +6,7 @@ import 'package:photopuzzle/camera/camera_main_page.dart';
 import 'package:photopuzzle/firebase/login_page.dart';
 import 'package:photopuzzle/home.dart';
 import 'package:photopuzzle/route/fade_route.dart';
+import 'package:photopuzzle/user_info_page.dart';
 
 class MainPage extends StatelessWidget {
   @override
@@ -23,9 +24,7 @@ class MainPage extends StatelessWidget {
               new Container(
                 color: Colors.lightGreen,
               ),
-              new Container(
-                color: Colors.red,
-              ),
+              new UserInfoPage(),
             ],
           ),
           floatingActionButton: FabCircularMenu(
