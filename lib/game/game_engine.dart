@@ -2,10 +2,6 @@ import 'image_node.dart';
 
 class GameEngine {
   static void makeRandom(List<ImageNode> list) {
-    List<int> srcArr = [];
-    for (int i = 0; i < srcArr.length; i++) {
-      srcArr.add(i);
-    }
 
     List<int> arr = [];
     do {
@@ -15,51 +11,62 @@ class GameEngine {
         list[i].curIndex = i;
         arr.add(list[i].index);
       }
-    } while (InversePairs(arr) % 2 != 0);
+    } while (readyReversePairs(arr) % 2 != 0);
   }
 
-  static int InversePairs(List<int> array) {
-    if (array.length == 0) {
+  ///
+  static int readyReversePairs(List<int> array) {
+    if (array.length < 2) {
       return 0;
     }
-    return InversePairs2(array, 0, array.length - 1);
+
+    int len = array.length;
+    List<int> temp = List.filled(len, 0);
+
+    return reversePairs(array,temp, 0, len - 1);
   }
 
-  static int InversePairs2(List<int> array, int start, int end) {
+  /// array
+  /// temp
+  /// start
+  /// end
+  static int reversePairs(List<int> array, List<int>temp, int start, int end) {
     int result = 0;
     if (start < end) {
-      int mid = ((start + end) / 2).floor();
-      result += InversePairs2(array, start, mid);
-      result += InversePairs2(array, mid + 1, end);
-      result += merge(array, start, mid, end);
+      int mid = (start + (end - start) / 2).floor();
+      /// start
+      result += reversePairs(array, temp, start, mid);
+      /// end
+      result += reversePairs(array, temp, mid + 1, end);
+      /// cross
+      result += merge(array,temp, start, mid, end);
     }
     return result;
   }
 
-  static int merge(List<int> array, int start, int mid, int end) {
+  static int merge(List<int>array,List<int>temp,int start,int mid ,int end){
+    int count = 0;
+    for(int i = start; i <= end; i ++){
+      temp[i] = array[i];
+    }
     int i = start;
     int j = mid + 1;
-    int k = 0;
-    List<int> temp = [];
-    temp.length = end - start + 1;
-    int result = 0;
-    while (i <= mid && j <= end) {
-      if (array[i] > array[j]) {
-        result += (end - j + 1);
-        temp[k++] = array[i++];
+    for(int k = start; k <= end; k ++){
+      if(i == mid + 1){
+        array[k] = temp[j];
+        j++;
+      } else if(j == end + 1){
+        array[k] = temp[i];
+        i++;
+      } else if(temp[i] <= temp[j]){
+        array[k] = temp[i];
+        i++;
       } else {
-        temp[k++] = array[j++];
+        array[k] = temp[j];
+        j++;
+        count += (mid - i + 1);
       }
     }
-    while (i <= mid) {
-      temp[k++] = array[i++];
-    }
-    while (j <= end) {
-      temp[k++] = array[j++];
-    }
-    for (int m = start; m <= end; m++) {
-      array[m] = temp[m - start];
-    }
-    return result;
+    return count;
   }
 }
