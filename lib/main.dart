@@ -2,10 +2,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:photopuzzle/common/route_name.dart';
-import 'package:photopuzzle/firebase/login_page.dart';
-import 'package:photopuzzle/main_page.dart';
-import 'package:photopuzzle/provider/model/camera_provider.dart';
+import 'package:photopuzzle/routes/route_name.dart';
+import 'package:photopuzzle/widgets/login_page.dart';
+import 'package:photopuzzle/widgets/main_page.dart';
+import 'package:photopuzzle/states/provider/model/camera_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {

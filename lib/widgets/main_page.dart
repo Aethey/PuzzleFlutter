@@ -1,11 +1,12 @@
 import 'package:camera/camera.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:photopuzzle/camera/camera_main_page.dart';
-import 'package:photopuzzle/firebase/login_page.dart';
-import 'package:photopuzzle/home.dart';
-import 'package:photopuzzle/route/fade_route.dart';
-import 'package:photopuzzle/user_info_page.dart';
+import 'package:photopuzzle/routes/fade_route.dart';
+import 'package:photopuzzle/widgets/user_info_page.dart';
+
+import 'camera/camera_main_page.dart';
+import 'home.dart';
+import 'login_page.dart';
 
 class MainPage extends StatelessWidget {
   @override

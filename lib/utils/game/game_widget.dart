@@ -3,12 +3,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photopuzzle/game/game_config.dart';
-import 'package:photopuzzle/game/game_engine.dart';
-import 'package:photopuzzle/game/game_painter.dart';
-import 'package:photopuzzle/game/image_node.dart';
-import 'package:photopuzzle/game/puzzle_util.dart';
+import 'package:photopuzzle/utils/game/puzzle_util.dart';
 import 'package:vibrate/vibrate.dart';
+
+import 'game_config.dart';
+import 'game_engine.dart';
+import 'game_painter.dart';
+import 'image_node.dart';
 
 class GameWidget extends StatefulWidget {
   final Size size;

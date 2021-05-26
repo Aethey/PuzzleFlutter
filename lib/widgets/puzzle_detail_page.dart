@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:photopuzzle/game_page.dart';
+
+import 'game_page.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({this.includeMarkAsDoneButton = true, this.bytes});

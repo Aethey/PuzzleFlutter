@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-import 'package:photopuzzle/game_page.dart';
 import 'package:photopuzzle/utils/image_util.dart';
+import 'package:photopuzzle/widgets/game_page.dart';
 
 class DisplayPicturePage extends StatelessWidget {
   final String imagePath;

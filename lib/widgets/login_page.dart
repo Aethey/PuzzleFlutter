@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:photopuzzle/home.dart';
-import 'package:photopuzzle/route/scale_route.dart';
+import 'package:photopuzzle/routes/scale_route.dart';
+import 'package:photopuzzle/widgets/home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,7 +27,7 @@ class LoginState extends State<LoginPage> {
       ),
       body: Container(
         child: Center(
-          child: RaisedButton(
+          child: ElevatedButton(
             onPressed: () {
               EasyLoading.show(status: 'loading...');
               _handleLogin();
@@ -44,25 +44,21 @@ class LoginState extends State<LoginPage> {
   }
 
   Future<FirebaseUser> _handleLogin() async {
-    GoogleSignInAccount googleCurrentUser = _googleSignIn.currentUser;
+    var googleCurrentUser = _googleSignIn.currentUser;
 
-    if (googleCurrentUser == null) {
-      googleCurrentUser = await _googleSignIn.signInSilently();
-    }
-    if (googleCurrentUser == null) {
-      googleCurrentUser = await _googleSignIn.signIn();
-    }
+    googleCurrentUser ??= await _googleSignIn.signInSilently();
+    googleCurrentUser ??= await _googleSignIn.signIn();
     if (googleCurrentUser == null) {
       return null;
     }
 
-    GoogleSignInAuthentication googleAuth =
+    var googleAuth =
         await googleCurrentUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final credential = GoogleAuthProvider.getCredential(
         accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-    final FirebaseUser user =
+    final user =
         (await _auth.signInWithCredential(credential)).user;
-    Navigator.push(context, ScaleRoute(page: HomePage()));
+    await Navigator.push(context, ScaleRoute(page: HomePage()));
     return user;
   }
 }

@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui' as ui show instantiateImageCodec, Codec, Image;
+import 'dart:ui' as ui show instantiateImageCodec, Image;
 import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
@@ -34,19 +32,9 @@ class PuzzleUtil {
   }
 
   Future<ui.Image> getImage(Uint8List bytes) async {
-    ///todo(ryu) 7.9  test
-//    String b64 = base64Encode(bytes);
-//    Map<String, dynamic> map = Map();
-//    map['b64'] = b64;
-//    map['time'] = timestamp;
-//    Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(
-//        DateTime.now().millisecondsSinceEpoch);
-//    CloudManager.instance.setDataToFirebase(map);
-//    ByteData data = await rootBundle.load(path);
-//    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
 
-    ui.Codec codec = await ui.instantiateImageCodec(bytes);
-    FrameInfo frameInfo = await codec.getNextFrame();
+    var codec = await ui.instantiateImageCodec(bytes);
+    var frameInfo = await codec.getNextFrame();
     return frameInfo.image;
   }
 
@@ -61,11 +49,11 @@ class PuzzleUtil {
   }
 
   List<ImageNode> doTask() {
-    List<ImageNode> list = [];
-    for (int j = 0; j < level; j++) {
-      for (int i = 0; i < level; i++) {
+    var list = <ImageNode>[];
+    for (var j = 0; j < level; j++) {
+      for (var i = 0; i < level; i++) {
         if (j * level + i < level * level - 1) {
-          ImageNode node = ImageNode();
+          var node = ImageNode();
           node.rect = getOkRectF(i, j);
           node.index = j * level + i;
           makeBitmap(node);
@@ -82,20 +70,20 @@ class PuzzleUtil {
   }
 
   void makeBitmap(ImageNode node) {
-    int i = node.getXIndex(level);
-    int j = node.getYIndex(level);
+    var i = node.getXIndex(level);
+    var j = node.getYIndex(level);
 
-    Rect rect = getShapeRect(i, j, eachBitmapWidth);
+    var rect = getShapeRect(i, j, eachBitmapWidth);
     rect = rect.shift(
         Offset(eachBitmapWidth.toDouble() * i, eachBitmapWidth.toDouble() * j));
 
-    PictureRecorder recorder = PictureRecorder();
-    double ww = eachBitmapWidth.toDouble();
-    Canvas canvas = Canvas(recorder, Rect.fromLTWH(0.0, 0.0, ww, ww));
+    var recorder = PictureRecorder();
+    var ww = eachBitmapWidth.toDouble();
+    var canvas = Canvas(recorder, Rect.fromLTWH(0.0, 0.0, ww, ww));
 
-    Rect rect2 = Rect.fromLTRB(0.0, 0.0, rect.width, rect.height);
+    var rect2 = Rect.fromLTRB(0.0, 0.0, rect.width, rect.height);
 
-    Paint paint = Paint();
+    var paint = Paint();
     canvas.drawImageRect(image, rect, rect2, paint);
     recorder.endRecording().toImage(ww.floor(), ww.floor()).then((value) {
       node.image = value;
