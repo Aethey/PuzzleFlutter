@@ -2,7 +2,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
-import 'package:photopuzzle/camera/display_picture_page.dart';
+
+import 'display_picture_page.dart';
 
 class CameraMainPage extends StatefulWidget {
   final CameraDescription camera;

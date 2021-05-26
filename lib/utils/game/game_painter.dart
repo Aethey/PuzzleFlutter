@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'dart:ui' as ui show instantiateImageCodec, Codec, Image, TextStyle;
+import 'dart:ui' as ui show TextStyle;
 
 import 'package:flutter/material.dart';
 
@@ -7,12 +7,12 @@ import 'game_config.dart';
 import 'image_node.dart';
 
 class GamePainter extends CustomPainter {
-  Paint mypaint;
+  Paint mPaint;
   Path path;
   final int level;
   final List<ImageNode> nodes;
   final ImageNode hitNode;
-  final bool needdraw;
+  final bool needDraw;
 
   final double downX, downY, newX, newY;
   final List<ImageNode> hitNodeList;
@@ -28,11 +28,11 @@ class GamePainter extends CustomPainter {
       this.downY,
       this.newX,
       this.newY,
-      this.needdraw) {
-    mypaint = Paint();
-    mypaint.style = PaintingStyle.stroke;
-    mypaint.strokeWidth = 1.0;
-    mypaint.color = Color(0xa0dddddd);
+      this.needDraw) {
+    mPaint = Paint();
+    mPaint.style = PaintingStyle.stroke;
+    mPaint.strokeWidth = 1.0;
+    mPaint.color = Color(0xa0dddddd);
 
     path = Path();
   }
@@ -40,10 +40,8 @@ class GamePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (nodes != null) {
-      for (int i = 0; i < nodes.length; ++i) {
-        ImageNode node = nodes[i];
-
-        Rect rect2 = Rect.fromLTRB(
+      for ( var node in nodes) {
+        var rect2 = Rect.fromLTRB(
             node.rect.left, node.rect.top, node.rect.right, node.rect.bottom);
         if (hitNodeList != null && hitNodeList.contains(node)) {
           if (direction == Direction.left || direction == Direction.right) {
@@ -54,15 +52,14 @@ class GamePainter extends CustomPainter {
           }
         }
         if (node.image != null) {
-          Rect srcRect = Rect.fromLTRB(0.0, 0.0, node.image.width.toDouble(),
+          var srcRect = Rect.fromLTRB(0.0, 0.0, node.image.width.toDouble(),
               node.image.height.toDouble());
-          canvas.drawImageRect(nodes[i].image, srcRect, rect2, Paint());
+          canvas.drawImageRect(node.image, srcRect, rect2, Paint());
         }
       }
 
-      for (int i = 0; i < nodes.length; ++i) {
-        ImageNode node = nodes[i];
-        ParagraphBuilder pb = ParagraphBuilder(ParagraphStyle(
+      for (var node in nodes) {
+        var pb = ParagraphBuilder(ParagraphStyle(
           textAlign: TextAlign.center,
           fontWeight: FontWeight.w300,
           fontStyle: FontStyle.normal,
@@ -72,10 +69,10 @@ class GamePainter extends CustomPainter {
           pb.pushStyle(ui.TextStyle(color: Color(0xff00ff00)));
         }
         pb.addText('${node.index + 1}');
-        ParagraphConstraints pc = ParagraphConstraints(width: node.rect.width);
-        Paragraph paragraph = pb.build()..layout(pc);
+        var pc = ParagraphConstraints(width: node.rect.width);
+        var paragraph = pb.build()..layout(pc);
 
-        Offset offset = Offset(node.rect.left,
+        var offset = Offset(node.rect.left,
             node.rect.top + node.rect.height / 2 - paragraph.height / 2);
         if (hitNodeList != null && hitNodeList.contains(node)) {
           if (direction == Direction.left || direction == Direction.right) {
@@ -92,6 +89,6 @@ class GamePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(GamePainter oldDelegate) {
-    return this.needdraw || oldDelegate.needdraw;
+    return needDraw || oldDelegate.needDraw;
   }
 }

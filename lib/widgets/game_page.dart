@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photopuzzle/game/game_widget.dart';
+import 'package:photopuzzle/utils/game/game_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class GamePage extends StatelessWidget {

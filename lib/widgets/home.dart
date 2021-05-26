@@ -4,11 +4,12 @@ import 'dart:typed_data';
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photopuzzle/camera/camera_main_page.dart';
-import 'package:photopuzzle/cloud/cloud_manager.dart';
+import 'package:photopuzzle/api/cloud_manager.dart';
 import 'package:photopuzzle/database/database_helper.dart';
 import 'package:photopuzzle/database/puzzle_mock_model.dart';
-import 'package:photopuzzle/puzzle_detail_page.dart';
+import 'package:photopuzzle/widgets/puzzle_detail_page.dart';
+
+import 'camera/camera_main_page.dart';
 
 
 class HomePage extends StatefulWidget {

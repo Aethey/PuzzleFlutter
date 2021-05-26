@@ -8,13 +8,7 @@ class CommonUtil {
   }
 
   static CommonUtil _getInstance() {
-    if (_instance == null) {
-      _instance = new CommonUtil._internal();
-    }
+    _instance ??= CommonUtil._internal();
     return _instance;
-  }
-
-  String getRandomTest(int x) {
-    String alphabet = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
   }
 }
