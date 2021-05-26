@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FadeRoute extends PageRoute {
+class FadeRoute extends PageRoute<void> {
   FadeRoute({
     @required this.builder,
     this.transitionDuration = const Duration(milliseconds: 300),

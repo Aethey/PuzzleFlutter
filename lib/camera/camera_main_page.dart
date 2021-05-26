@@ -64,7 +64,6 @@ class CameraMainState extends State<CameraMainPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
         // Provide an onPressed callback.
         onPressed: () async {
           // Take the Picture in a try / catch block. If anything goes wrong,
@@ -86,7 +85,7 @@ class CameraMainState extends State<CameraMainPage> {
             await _controller.takePicture(path);
 
             // If the picture was taken, display it on a new screen.
-            Navigator.push(
+            await Navigator.push<void>(
               context,
               MaterialPageRoute(
                 builder: (context) => DisplayPicturePage(imagePath: path),
@@ -97,6 +96,7 @@ class CameraMainState extends State<CameraMainPage> {
             print(e);
           }
         },
+        child: Icon(Icons.camera_alt),
       ),
     );
   }

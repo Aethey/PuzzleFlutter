@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -24,7 +23,7 @@ class DisplayPicturePage extends StatelessWidget {
             child: Image.file(File(imagePath)),
           ),
           Container(
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {
                 startGame(context, imagePath);
               },
@@ -39,9 +38,9 @@ class DisplayPicturePage extends StatelessWidget {
   }
 
   Future<void> startGame(BuildContext context, String imagePath) async {
-    Uint8List bytes = await ImageUtil.pathToImage(imagePath);
+    var bytes = await ImageUtil.pathToImage(imagePath);
 
-    Navigator.push(
+    await Navigator.push<void>(
         context,
         MaterialPageRoute(
             builder: (context) =>

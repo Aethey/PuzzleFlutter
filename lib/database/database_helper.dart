@@ -5,7 +5,7 @@ import 'package:sqflite/sqlite_api.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = new DatabaseHelper.internal();
+  static final DatabaseHelper _instance = DatabaseHelper.internal();
   static Database _db;
   factory DatabaseHelper() => _instance;
 
@@ -20,9 +20,9 @@ class DatabaseHelper {
     return _db;
   }
 
-  initDb() async {
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, Config.databaseName);
+  Future<Database> initDb() async {
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, Config.databaseName);
 
     var db = await openDatabase(path, version: 1, onCreate: _onCreate);
     return db;
@@ -33,7 +33,7 @@ class DatabaseHelper {
         'CREATE TABLE PuzzleMockTable(id INTEGER PRIMARY KEY, name TEXT)');
   }
 
-  Future<void> insertPUzzleMockData(PuzzleMockModel model) async {
+  Future<void> insertPuzzleMockData(PuzzleMockModel model) async {
     // Get a reference to the database.
     var dbClient = await db;
 
@@ -52,7 +52,7 @@ class DatabaseHelper {
     List<Map> result =
         await dbClient.query('PuzzleMockTable', where: '$id = 001');
 
-    if (result.length > 0) {
+    if (result.isNotEmpty) {
       return result.first.toString();
     }
 

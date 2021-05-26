@@ -28,7 +28,7 @@ class _TabsPageState extends State<TabsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    observer.subscribe(this, ModalRoute.of(context));
+    observer.subscribe(this, (ModalRoute.of(context)) as PageRoute<dynamic>);
   }
 
   @override

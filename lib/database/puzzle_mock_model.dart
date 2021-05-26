@@ -6,7 +6,7 @@ class PuzzleMockModel {
   PuzzleMockModel(this.id, this.name);
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'id': id,
       'name': name,
     };

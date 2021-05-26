@@ -12,16 +12,14 @@ class CloudManager {
   }
 
   static CloudManager _getInstance() {
-    if (_instance == null) {
-      _instance = new CloudManager._internal();
-    }
+    _instance ??= CloudManager._internal();
     return _instance;
   }
 
   Future<Map<String, dynamic>> getPuzzleFromCloud(
       String collectionID, String documentID) async {
     print('getPuzzleFromCloud');
-    DocumentSnapshot dc = await Firestore.instance
+    var dc = await Firestore.instance
         .collection(collectionID)
         .document(documentID)
         .get();
@@ -42,7 +40,7 @@ class CloudManager {
   void setDataToFirebase(Map<String, dynamic> map) {
     Firestore.instance
         .collection('images')
-        .document("user001")
-        .updateData({randomString(5): map});
+        .document('user001')
+        .updateData(<String, dynamic>{randomString(5): map});
   }
 }

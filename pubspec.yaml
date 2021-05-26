@@ -65,6 +65,8 @@ dependencies:
   animations: ^2.0.0
   # https://pub.dev/packages/provider#-installing-tab-
   provider: ^4.3.1
+  # https://github.com/passsy/dart-lint
+  pedantic: ^1.11.0
 #  https://flutter.cn/docs/cookbook/testing/unit/introduction
   test:
 

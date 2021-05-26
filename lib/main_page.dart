@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:camera/camera.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
@@ -12,19 +11,19 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new MaterialApp(
+    return MaterialApp(
       color: Colors.yellow,
       home: DefaultTabController(
         length: 4,
-        child: new Scaffold(
+        child: Scaffold(
           body: TabBarView(
             children: [
               LoginPage(),
               HomePage(),
-              new Container(
+              Container(
                 color: Colors.lightGreen,
               ),
-              new UserInfoPage(),
+              UserInfoPage(),
             ],
           ),
           floatingActionButton: FabCircularMenu(
@@ -48,19 +47,19 @@ class MainPage extends StatelessWidget {
                       print('Favorite');
                     }),
               ]),
-          bottomNavigationBar: new TabBar(
+          bottomNavigationBar: TabBar(
             tabs: [
               Tab(
-                icon: new Icon(Icons.home),
+                icon: Icon(Icons.home),
               ),
               Tab(
-                icon: new Icon(Icons.rss_feed),
+                icon: Icon(Icons.rss_feed),
               ),
               Tab(
-                icon: new Icon(Icons.perm_identity),
+                icon: Icon(Icons.perm_identity),
               ),
               Tab(
-                icon: new Icon(Icons.settings),
+                icon: Icon(Icons.settings),
               )
             ],
             labelColor: Colors.yellow,
@@ -81,7 +80,7 @@ class MainPage extends StatelessWidget {
     // Get a specific camera from the list of available cameras.
     final firstCamera = cameras.first;
 
-    Navigator.push(context, FadeRoute(builder: (context) {
+    await Navigator.push<void>(context, FadeRoute(builder: (context) {
       return CameraMainPage(
         camera: firstCamera,
       );

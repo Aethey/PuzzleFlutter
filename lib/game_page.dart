@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:photopuzzle/game/game_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -13,17 +12,17 @@ class GamePage extends StatelessWidget {
   final int level;
   GamePage(this.size, this.bytes, this.level);
 
-  final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Crea
+  final StopWatchTimer _stopWatchTimer = StopWatchTimer();
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    Future.delayed(Duration(milliseconds: 1000))
-        .then((value) => _stopWatchTimer.onExecute.add(StopWatchExecute.start));
+    Future<dynamic>.delayed(Duration(milliseconds: 1000))
+        .then((dynamic value) => _stopWatchTimer.onExecute.add(StopWatchExecute.start));
     return Stack(
       children: [
         Image.asset(
-          "assets/bg/background01.jpg",
+          'assets/bg/background01.jpg',
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:photopuzzle/common/route_name.dart';
 import 'package:photopuzzle/firebase/login_page.dart';
-import 'package:photopuzzle/home.dart';
 import 'package:photopuzzle/main_page.dart';
 import 'package:photopuzzle/provider/model/camera_provider.dart';
 import 'package:provider/provider.dart';

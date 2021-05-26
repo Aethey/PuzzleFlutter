@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class CameraProviderModel extends ChangeNotifier {
   static CameraController cameraController;
 
-  get camera => cameraController;
+  CameraController get camera => cameraController;
 
   CameraProviderModel();
 

@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:photopuzzle/game_page.dart';
-import 'package:photopuzzle/utils/image_util.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({this.includeMarkAsDoneButton = true, this.bytes});
@@ -37,7 +35,7 @@ class DetailsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     startGame(context);
                   },
@@ -61,9 +59,9 @@ class DetailsPage extends StatelessWidget {
   }
 
   Future<void> startGame(BuildContext context) async {
-    Navigator.push(
+    await Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
             builder: (context) =>
                 GamePage(MediaQuery.of(context).size, bytes, 3)));
   }
