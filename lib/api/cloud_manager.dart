@@ -4,6 +4,7 @@ import 'package:random_string/random_string.dart';
 
 class CloudManager {
   factory CloudManager() => _getInstance();
+
   static CloudManager get instance => _getInstance();
   static CloudManager _instance;
 
@@ -42,5 +43,12 @@ class CloudManager {
         .collection('images')
         .document('user001')
         .updateData(<String, dynamic>{randomString(5): map});
+  }
+
+  Future<void> deleteData(String collectionID, String documentID) async {
+    return await Firestore.instance
+        .collection(collectionID)
+        .document(documentID)
+        .delete();
   }
 }

@@ -83,7 +83,7 @@ class CameraMainState extends State<CameraMainPage> {
             );
 
             // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture(path);
+            await _controller.takePicture();
 
             // If the picture was taken, display it on a new screen.
             await Navigator.push<void>(

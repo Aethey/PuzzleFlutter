@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photopuzzle/api/cloud_manager.dart';
 
 class UserInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Text('USERINFO'),
       ),
       body: Column(
-        children: [_buildInfoWidget(context), _buildGridWidget(context)],
+        children: [_buildInfoWidget(context), _buildGridWidget(context),_buildBottomView()],
       ),
     );
   }
@@ -25,7 +25,7 @@ class UserInfoPage extends StatelessWidget {
   Widget _buildGridWidget(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 4 / 5,
-      height: MediaQuery.of(context).size.height * 3 / 5,
+      height: MediaQuery.of(context).size.height / 2,
       color: Colors.red,
       alignment: Alignment.center,
       child: GridView.builder(
@@ -40,6 +40,20 @@ class UserInfoPage extends StatelessWidget {
               ),
             );
           }),
+    );
+  }
+
+  Widget _buildBottomView(){
+    return Container(
+      child: ElevatedButton(
+        onPressed: (){
+          CloudManager.instance.deleteData('images', 'user001').then((value) =>
+          {
+            print('delete success')
+          });
+        },
+        child: Text('clear data'),
+      ),
     );
   }
 }
