@@ -22,8 +22,6 @@ class HomePage extends StatefulWidget {
 
 class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
-//  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -37,54 +35,65 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Stack(
-      children: [
-        Image.asset(
-          'assets/bg/background01.jpg',
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-//          key: scaffoldKey,
-          body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: FutureBuilder<Map<String, dynamic>>(
-              future:
-                  CloudManager.instance.getPuzzleFromCloud('images', 'user001'),
-              builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return Container(
-                      child: Text('NONE'),
-                    );
-                    break;
-                  case ConnectionState.waiting:
-                    return Container(
-                      child: Text('WAITING'),
-                    );
-                    break;
-                  case ConnectionState.active:
-                    return Container(
-                      child: Text('ACTIVE'),
-                    );
-                    break;
-                  case ConnectionState.done:
-                    return _buildGridView(snapshot.data);
-                    break;
-
-                  default:
-                    return Container();
-                }
-              },
-            ),
-          ),
-        )
-      ],
-    );
+    return buildStack(context);
   }
+
+  Stack buildStack(BuildContext context) {
+    return Stack(
+    children: [
+      Image.asset(
+        'assets/bg/background01.jpg',
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
+      ),
+      Scaffold(
+        backgroundColor: Colors.transparent,
+//          key: scaffoldKey,
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: FutureBuilder<Map<String, dynamic>>(
+            future:
+                CloudManager.instance.getPuzzleFromCloud('images', 'user001'),
+            builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Container(
+                    child: Center(child: Text('NONE',style: Theme.of(context).textTheme.headline2,)),
+                  );
+                  break;
+                case ConnectionState.waiting:
+                  return Container(
+                    child: Text('WAITING'),
+                  );
+                  break;
+                case ConnectionState.active:
+                  return Container(
+                    child: Text('ACTIVE'),
+                  );
+                  break;
+                case ConnectionState.done:
+                  if(snapshot.data == null){
+                    return Container(
+                      child: Center(child: Text('NONE',style: Theme.of(context).textTheme.headline2,)),
+                    );
+                  } else {
+                    return _buildGridView(snapshot.data);
+                  }
+                  break;
+
+                default:
+                  return Container();
+              }
+            },
+          ),
+        ),
+      )
+    ],
+  );
+  }
+
 
   Widget _buildGridView(Map<String, dynamic> map) {
     return Container(
