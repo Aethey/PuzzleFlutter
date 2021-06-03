@@ -7,7 +7,7 @@ class GameEngine {
     do {
       arr.clear();
       list.shuffle();
-      for (int i = 0; i < list.length; i++) {
+      for (var i = 0; i < list.length; i++) {
         list[i].curIndex = i;
         arr.add(list[i].index);
       }
@@ -20,8 +20,8 @@ class GameEngine {
       return 0;
     }
 
-    int len = array.length;
-    List<int> temp = List.filled(len, 0);
+    var len = array.length;
+    var temp = List<int>.filled(len, 0);
 
     return reversePairs(array,temp, 0, len - 1);
   }

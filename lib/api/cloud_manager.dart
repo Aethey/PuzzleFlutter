@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:random_string/random_string.dart';
 
 class CloudManager {
   factory CloudManager() => _getInstance();
@@ -17,32 +16,37 @@ class CloudManager {
     return _instance;
   }
 
-  Future<Map<String, dynamic>> getPuzzleFromCloud(
+  Future<QuerySnapshot> getPuzzleFromCloud(
       String collectionID, String documentID) async {
     print('getPuzzleFromCloud');
     var dc = await Firestore.instance
         .collection(collectionID)
         .document(documentID)
-        .get();
+        .collection('puzzles')
+        .getDocuments();
     EasyLoading.dismiss();
 
-    return dc.data;
+    return dc;
   }
 
   // realtime
-  Stream<DocumentSnapshot> getPuzzleFromCloudRealTime(
+  Stream<QuerySnapshot> getPuzzleFromCloudRealTime(
       String collectionID, String documentID) {
     return Firestore.instance
         .collection(collectionID)
         .document(documentID)
+        .collection('puzzles')
         .snapshots();
   }
 
-  void setDataToFirebase(Map<String, dynamic> map) {
-    Firestore.instance
-        .collection('images')
-        .document('user001')
-        .updateData(<String, dynamic>{randomString(5): map});
+  void setDataToFirebase(
+      String userName, String imageName, Map<String, dynamic> map) {
+    final doc = Firestore.instance.collection('images');
+    doc
+        .document(userName)
+        .collection('puzzles')
+        .document(imageName)
+        .setData(map);
   }
 
   Future<void> deleteData(String collectionID, String documentID) async {

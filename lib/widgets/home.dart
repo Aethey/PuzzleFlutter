@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:animations/animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photopuzzle/api/cloud_manager.dart';
 import 'package:photopuzzle/database/database_helper.dart';
 import 'package:photopuzzle/database/puzzle_mock_model.dart';
 import 'package:photopuzzle/widgets/puzzle_detail_page.dart';
 
-import 'camera/camera_main_page.dart';
-
+import 'camera/display_picture_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,6 +23,8 @@ class HomePage extends StatefulWidget {
 
 class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   final ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  final picker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
@@ -40,74 +43,77 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
   Stack buildStack(BuildContext context) {
     return Stack(
-    children: [
-      Image.asset(
-        'assets/bg/background01.jpg',
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        fit: BoxFit.cover,
-      ),
-      Scaffold(
-        backgroundColor: Colors.transparent,
-//          key: scaffoldKey,
-        body: Container(
-          width: MediaQuery.of(context).size.width,
+      children: [
+        Image.asset(
+          'assets/bg/background01.jpg',
           height: MediaQuery.of(context).size.height,
-          child: FutureBuilder<Map<String, dynamic>>(
-            future:
-                CloudManager.instance.getPuzzleFromCloud('images', 'user001'),
-            builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return Container(
-                    child: Center(child: Text('NONE',style: Theme.of(context).textTheme.headline2,)),
-                  );
-                  break;
-                case ConnectionState.waiting:
-                  return Container(
-                    child: Text('WAITING'),
-                  );
-                  break;
-                case ConnectionState.active:
-                  return Container(
-                    child: Text('ACTIVE'),
-                  );
-                  break;
-                case ConnectionState.done:
-                  if(snapshot.data == null){
-                    return Container(
-                      child: Center(child: Text('NONE',style: Theme.of(context).textTheme.headline2,)),
-                    );
-                  } else {
-                    return _buildGridView(snapshot.data);
-                  }
-                  break;
-
-                default:
-                  return Container();
-              }
-            },
-          ),
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
         ),
-      )
-    ],
-  );
+        Scaffold(
+          backgroundColor: Colors.transparent,
+//          key: scaffoldKey,
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: CloudManager.instance
+                  .getPuzzleFromCloudRealTime('images', 'user001'),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return Container(
+                      child: Center(
+                          child: Text(
+                        'NONE',
+                        style: Theme.of(context).textTheme.headline2,
+                      )),
+                    );
+                    break;
+                  case ConnectionState.waiting:
+                    return Container(
+                      child: Text('WAITING'),
+                    );
+                    break;
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                    if (snapshot.data == null) {
+                      return Container(
+                        child: Center(
+                            child: Text(
+                          'NONE',
+                          style: Theme.of(context).textTheme.headline2,
+                        )),
+                      );
+                    } else {
+                      return _buildGridView(snapshot.data);
+                    }
+                    break;
+
+                  default:
+                    return Container();
+                }
+              },
+            ),
+          ),
+        )
+      ],
+    );
   }
 
-
-  Widget _buildGridView(Map<String, dynamic> map) {
+  Widget _buildGridView(QuerySnapshot data) {
     return Container(
       color: Colors.transparent,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
         itemBuilder: (context, i) {
-          var key = map.keys.elementAt(i);
-          var bytes = Base64Decoder().convert(map[key]['b64'] as String);
-
+          var bytes =
+              Base64Decoder().convert(data.documents[i]['b64'] as String);
           return animContainer(bytes);
         },
-        itemCount: map.length,
+        itemCount: data.documents.length,
       ),
     );
   }
@@ -146,13 +152,23 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   }
 
   Future<void> getCamera() async {
+    await picker.getImage(source: ImageSource.camera).then((value) => {
+          Navigator.push<void>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DisplayPicturePage(imagePath: value.path),
+            ),
+          )
+        });
 
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CameraMainPage(camera: null,),
-      ),
-    );
+    // await Navigator.push<void>(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => CameraMainPage(
+    //       camera: null,
+    //     ),
+    //   ),
+    // );
   }
 
   @override

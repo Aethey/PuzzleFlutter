@@ -52,11 +52,12 @@ class PuzzleUtil {
     var list = <ImageNode>[];
     for (var j = 0; j < level; j++) {
       for (var i = 0; i < level; i++) {
-        if (j * level + i < level * level - 1) {
+        var index = j * level + i;
+        if (index < level * level - 1) {
           var node = ImageNode();
           node.rect = getOkRectF(i, j);
-          node.index = j * level + i;
-          makeBitmap(node);
+          node.index = index;
+          makeBitmap(node,i,j);
           list.add(node);
         }
       }
@@ -69,29 +70,21 @@ class PuzzleUtil {
         baseX + eachWidth * i, baseY + eachWidth * j, eachWidth, eachWidth);
   }
 
-  void makeBitmap(ImageNode node) {
-    var i = node.getXIndex(level);
-    var j = node.getYIndex(level);
+  void makeBitmap(ImageNode node,int i,int j) {
 
-    var rect = getShapeRect(i, j, eachBitmapWidth);
-    rect = rect.shift(
-        Offset(eachBitmapWidth.toDouble() * i, eachBitmapWidth.toDouble() * j));
-
+    var rect = getShapeRect(eachBitmapWidth.toDouble() * i, eachBitmapWidth.toDouble() * j, eachBitmapWidth);
     var recorder = PictureRecorder();
     var ww = eachBitmapWidth.toDouble();
     var canvas = Canvas(recorder, Rect.fromLTWH(0.0, 0.0, ww, ww));
-
     var rect2 = Rect.fromLTRB(0.0, 0.0, rect.width, rect.height);
-
     var paint = Paint();
     canvas.drawImageRect(image, rect, rect2, paint);
     recorder.endRecording().toImage(ww.floor(), ww.floor()).then((value) {
       node.image = value;
     });
-    node.rect = getOkRectF(i, j);
   }
 
-  Rect getShapeRect(int i, int j, double width) {
-    return Rect.fromLTRB(0.0, 0.0, width, width);
+  Rect getShapeRect(double x, double y, double width) {
+    return Rect.fromLTRB(0.0 + x, 0.0 + y, width + x, width + y);
   }
 }

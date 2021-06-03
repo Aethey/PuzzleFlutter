@@ -30,10 +30,6 @@ class GamePainter extends CustomPainter {
       this.newY,
       this.needDraw) {
     mPaint = Paint();
-    mPaint.style = PaintingStyle.stroke;
-    mPaint.strokeWidth = 1.0;
-    mPaint.color = Color(0xa0dddddd);
-
     path = Path();
   }
 
@@ -41,8 +37,7 @@ class GamePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (nodes != null) {
       for ( var node in nodes) {
-        var rect2 = Rect.fromLTRB(
-            node.rect.left, node.rect.top, node.rect.right, node.rect.bottom);
+        var rect2 = node.rect;
         if (hitNodeList != null && hitNodeList.contains(node)) {
           if (direction == Direction.left || direction == Direction.right) {
             rect2 = node.rect.shift(Offset(newX - downX, 0.0));
@@ -54,7 +49,7 @@ class GamePainter extends CustomPainter {
         if (node.image != null) {
           var srcRect = Rect.fromLTRB(0.0, 0.0, node.image.width.toDouble(),
               node.image.height.toDouble());
-          canvas.drawImageRect(node.image, srcRect, rect2, Paint());
+          canvas.drawImageRect(node.image, srcRect, rect2, mPaint);
         }
       }
 

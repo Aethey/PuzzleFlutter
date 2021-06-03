@@ -1,7 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' show join;
-import 'package:path_provider/path_provider.dart';
 
 import 'display_picture_page.dart';
 
@@ -75,21 +73,13 @@ class CameraMainState extends State<CameraMainPage> {
 
             // Construct the path where the image should be saved using the
             // pattern package.
-            final path = join(
-              // Store the picture in the temp directory.
-              // Find the temp directory using the `path_provider` plugin.
-              (await getTemporaryDirectory()).path,
-              '${DateTime.now()}.png',
-            );
-
-            // Attempt to take a picture and log where it's been saved.
-            await _controller.takePicture();
+            final image = await _controller.takePicture();
 
             // If the picture was taken, display it on a new screen.
             await Navigator.push<void>(
               context,
               MaterialPageRoute(
-                builder: (context) => DisplayPicturePage(imagePath: path),
+                builder: (context) => DisplayPicturePage(imagePath: image.path),
               ),
             );
           } catch (e) {
