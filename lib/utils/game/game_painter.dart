@@ -13,6 +13,7 @@ class GamePainter extends CustomPainter {
   final List<ImageNode> nodes;
   final ImageNode hitNode;
   final bool needDraw;
+  final bool showNum;
 
   final double downX, downY, newX, newY;
   final List<ImageNode> hitNodeList;
@@ -28,21 +29,17 @@ class GamePainter extends CustomPainter {
       this.downY,
       this.newX,
       this.newY,
-      this.needDraw) {
+      this.needDraw,
+      this.showNum) {
     mPaint = Paint();
-    mPaint.style = PaintingStyle.stroke;
-    mPaint.strokeWidth = 1.0;
-    mPaint.color = Color(0xa0dddddd);
-
     path = Path();
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     if (nodes != null) {
-      for ( var node in nodes) {
-        var rect2 = Rect.fromLTRB(
-            node.rect.left, node.rect.top, node.rect.right, node.rect.bottom);
+      for (ImageNode node in nodes) {
+        Rect rect2 = node.rect;
         if (hitNodeList != null && hitNodeList.contains(node)) {
           if (direction == Direction.left || direction == Direction.right) {
             rect2 = node.rect.shift(Offset(newX - downX, 0.0));
@@ -52,37 +49,40 @@ class GamePainter extends CustomPainter {
           }
         }
         if (node.image != null) {
-          var srcRect = Rect.fromLTRB(0.0, 0.0, node.image.width.toDouble(),
+          Rect srcRect = Rect.fromLTRB(0.0, 0.0, node.image.width.toDouble(),
               node.image.height.toDouble());
-          canvas.drawImageRect(node.image, srcRect, rect2, Paint());
+          canvas.drawImageRect(node.image, srcRect, rect2, mPaint);
         }
       }
 
-      for (var node in nodes) {
-        var pb = ParagraphBuilder(ParagraphStyle(
-          textAlign: TextAlign.center,
-          fontWeight: FontWeight.w300,
-          fontStyle: FontStyle.normal,
-          fontSize: hitNode == node ? 20.0 : 15.0,
-        ));
-        if (hitNode == node) {
-          pb.pushStyle(ui.TextStyle(color: Color(0xff00ff00)));
-        }
-        pb.addText('${node.index + 1}');
-        var pc = ParagraphConstraints(width: node.rect.width);
-        var paragraph = pb.build()..layout(pc);
-
-        var offset = Offset(node.rect.left,
-            node.rect.top + node.rect.height / 2 - paragraph.height / 2);
-        if (hitNodeList != null && hitNodeList.contains(node)) {
-          if (direction == Direction.left || direction == Direction.right) {
-            offset = Offset(offset.dx + newX - downX, offset.dy);
-          } else if (direction == Direction.top ||
-              direction == Direction.bottom) {
-            offset = Offset(offset.dx, offset.dy + newY - downY);
+      if (showNum) {
+        for (ImageNode node in nodes) {
+          ParagraphBuilder pb = ParagraphBuilder(ParagraphStyle(
+            textAlign: TextAlign.center,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.normal,
+            fontSize: hitNode == node ? 20.0 : 15.0,
+          ));
+          if (hitNode == node) {
+            pb.pushStyle(ui.TextStyle(color: Color(0xff00ff00)));
           }
+          pb.addText('${node.index + 1}');
+          ParagraphConstraints pc =
+              ParagraphConstraints(width: node.rect.width);
+          Paragraph paragraph = pb.build()..layout(pc);
+
+          Offset offset = Offset(node.rect.left,
+              node.rect.top + node.rect.height / 2 - paragraph.height / 2);
+          if (hitNodeList != null && hitNodeList.contains(node)) {
+            if (direction == Direction.left || direction == Direction.right) {
+              offset = Offset(offset.dx + newX - downX, offset.dy);
+            } else if (direction == Direction.top ||
+                direction == Direction.bottom) {
+              offset = Offset(offset.dx, offset.dy + newY - downY);
+            }
+          }
+          canvas.drawParagraph(paragraph, offset);
         }
-        canvas.drawParagraph(paragraph, offset);
       }
     }
   }

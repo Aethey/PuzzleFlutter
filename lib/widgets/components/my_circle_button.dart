@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:photopuzzle/common/constants.dart';
+
+class MyCircleButton extends StatelessWidget {
+  const MyCircleButton({Key key, this.text, this.press, this.width})
+      : super(key: key);
+  final String text;
+  final Function press;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: width,
+        height: width,
+        child: TextButton(
+          onPressed: () => press(),
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.black),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(width / 2))))),
+          child: Text(text,
+              style: Theme.of(context).textTheme.headline5.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  )),
+        ));
+  }
+}

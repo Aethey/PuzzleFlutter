@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photopuzzle/utils/game/puzzle_util.dart';
 import 'package:vibrate/vibrate.dart';
 
@@ -11,10 +12,13 @@ import 'game_engine.dart';
 import 'game_painter.dart';
 import 'image_node.dart';
 
+final numberVisibleProvider = StateProvider((ref) => true);
+
 class GameWidget extends StatefulWidget {
   final Size size;
   final Uint8List bytes;
   final int level;
+
   GameWidget(this.size, this.bytes, this.level);
 
   @override
@@ -39,7 +43,7 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
   double downX, downY, newX, newY;
   int emptyIndex;
   Direction direction;
-  bool needDraw = true;
+  bool needDraw = true, showNum = true;
   List<ImageNode> hitNodeList = [];
 
   GameState gameState = GameState.loading;
@@ -79,20 +83,30 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
         child: Text('Restart'),
       ));
     } else {
-      return Stack(
-        children: [
-          GestureDetector(
-            onPanDown: onPanDown,
-            onPanUpdate: onPanUpdate,
-            onPanEnd: onPanUp,
-            child: Container(
-              child: CustomPaint(
-                  painter: GamePainter(nodes, level, hitNode, hitNodeList,
-                      direction, downX, downY, newX, newY, needDraw),
-                  size: Size.infinite),
-            ),
+      return GestureDetector(
+        onPanDown: onPanDown,
+        onPanUpdate: onPanUpdate,
+        onPanEnd: onPanUp,
+        child: Container(
+          child: Consumer(
+            builder: (context, watch, _) {
+              return CustomPaint(
+                  painter: GamePainter(
+                      nodes,
+                      level,
+                      hitNode,
+                      hitNodeList,
+                      direction,
+                      downX,
+                      downY,
+                      newX,
+                      newY,
+                      needDraw,
+                      watch(numberVisibleProvider).state),
+                  size: Size.infinite);
+            },
           ),
-        ],
+        ),
       );
     }
   }
@@ -118,8 +132,8 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
     nodes.forEach((node) {
       nodeMap[node.curIndex] = node;
 
-      var rect = node.rect;
-      var dstRect = puzzleUtil.getOkRectF(
+      Rect rect = node.rect;
+      Rect dstRect = puzzleUtil.getOkRectF(
           node.curIndex % level, (node.curIndex / level).floor());
 
       final dealtX = dstRect.left - rect.left;
@@ -129,8 +143,8 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
       final oldY = rect.top;
 
       alpha.addListener(() {
-        var oldNewX2 = alpha.value * dealtX / 100;
-        var oldNewY2 = alpha.value * dealtY / 100;
+        double oldNewX2 = alpha.value * dealtX / 100;
+        double oldNewY2 = alpha.value * dealtY / 100;
         setState(() {
           node.rect = Rect.fromLTWH(
               oldX + oldNewX2, oldY + oldNewY2, rect.width, rect.height);
@@ -151,9 +165,9 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
     }
     Vibrate.feedback(FeedbackType.heavy);
     needDraw = true;
-    var referenceBox = context.findRenderObject() as RenderBox;
-    var localPosition = referenceBox.globalToLocal(details.globalPosition);
-    for (var node in nodes) {
+    RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    Offset localPosition = referenceBox.globalToLocal(details.globalPosition);
+    for (ImageNode node in nodes) {
       if (node.rect.contains(localPosition)) {
         hitNode = node;
         direction = isBetween(hitNode, emptyIndex);
@@ -174,8 +188,8 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
     if (hitNode == null) {
       return;
     }
-    var referenceBox = context.findRenderObject() as RenderBox;
-    var localPosition = referenceBox.globalToLocal(details.globalPosition);
+    RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    Offset localPosition = referenceBox.globalToLocal(details.globalPosition);
     newX = localPosition.dx;
     newY = localPosition.dy;
     if (direction == Direction.top) {
@@ -217,7 +231,8 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
     hitNodeList.clear();
     hitNode = null;
 
-    var isComplete = true;
+    /// over over
+    bool isComplete = true;
     nodes.forEach((node) {
       if (node.curIndex != node.index) {
         isComplete = false;
@@ -231,20 +246,20 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
   }
 
   Direction isBetween(ImageNode node, int emptyIndex) {
-    var x = emptyIndex % level;
-    var y = (emptyIndex / level).floor();
+    int x = emptyIndex % level;
+    int y = (emptyIndex / level).floor();
 
-    var x2 = node.curIndex % level;
-    var y2 = (node.curIndex / level).floor();
+    int x2 = node.curIndex % level;
+    int y2 = (node.curIndex / level).floor();
 
     if (x == x2) {
       if (y2 < y) {
-        for (var index = y2; index < y; ++index) {
+        for (int index = y2; index < y; ++index) {
           hitNodeList.add(nodeMap[index * level + x]);
         }
         return Direction.bottom;
       } else if (y2 > y) {
-        for (var index = y2; index > y; --index) {
+        for (int index = y2; index > y; --index) {
           hitNodeList.add(nodeMap[index * level + x]);
         }
         return Direction.top;
@@ -252,12 +267,12 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
     }
     if (y == y2) {
       if (x2 < x) {
-        for (var index = x2; index < x; ++index) {
+        for (int index = x2; index < x; ++index) {
           hitNodeList.add(nodeMap[y * level + index]);
         }
         return Direction.right;
       } else if (x2 > x) {
-        for (var index = x2; index > x; --index) {
+        for (int index = x2; index > x; --index) {
           hitNodeList.add(nodeMap[y * level + index]);
         }
         return Direction.left;
@@ -267,7 +282,7 @@ class GameWidgetState extends State<GameWidget> with TickerProviderStateMixin {
   }
 
   void swapEmpty() {
-    var v = -level;
+    int v = -level;
     if (direction == Direction.right) {
       v = 1;
     } else if (direction == Direction.left) {

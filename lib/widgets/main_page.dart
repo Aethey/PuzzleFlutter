@@ -1,32 +1,32 @@
-import 'package:camera/camera.dart';
+import 'dart:io';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:photopuzzle/routes/fade_route.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/widgets/user_info_page.dart';
 
-import 'camera/camera_main_page.dart';
-import 'home.dart';
-import 'login/login_page.dart';
+import 'camera/display_picture_page.dart';
+import 'home/home.dart';
 
 class MainPage extends StatelessWidget {
   final int heroTag;
   final FirebaseUser user;
+  final picker = ImagePicker();
 
-  const MainPage({Key key, this.heroTag, this.user}) : super(key: key);
+  MainPage({Key key, this.heroTag, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    Size size = MediaQuery.of(context).size;
     return MaterialApp(
-      color: Colors.yellow,
+      debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           body: TabBarView(
             children: [
-              // LoginPage(),
               HomePage(),
               Container(
                 color: Colors.lightGreen,
@@ -34,82 +34,126 @@ class MainPage extends StatelessWidget {
               UserInfoPage(),
             ],
           ),
-          floatingActionButton: FabCircularMenu(
-              ringDiameter: MediaQuery.of(context).size.width * 2 / 3,
-              ringColor: Colors.transparent,
-              fabOpenColor: Colors.white,
-              fabCloseColor: Colors.blueGrey,
-              fabOpenIcon: Icon(Icons.menu),
-              fabCloseIcon: Icon(
-                Icons.clear,
-              ),
-              children: <Widget>[
-                IconButton(
-                    icon: Icon(Icons.camera),
-                    onPressed: () {
-                      getCamera(context);
-                    }),
-                IconButton(
-                    icon: Icon(Icons.photo_library),
-                    onPressed: () {
-                      print('Favorite');
-                    }),
-              ]),
-          bottomNavigationBar: Container(
-            padding: EdgeInsets.only(bottom: 20,top: 10),
-            child: Container(
-              color: Colors.black,
-              child: TabBar(
-                tabs: [
-                  // Tab(
-                  //   icon: Icon(Icons.home),
-                  // ),
-                  Tab(
-                    icon: Icon(Icons.home),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.perm_identity),
-                  ),
-                  Tab(
-                    icon: Hero(tag: '$heroTag', child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  user.photoUrl)),
-                          color: Colors.black,
-                          shape: BoxShape.circle),
-
-                      // child: Image.asset("assets/images/bg01.jpg",fit: BoxFit.fill,)
-                    )),
-                  )
-                ],
-                labelColor: Colors.yellow,
-                unselectedLabelColor: Colors.blue,
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorPadding: EdgeInsets.all(5.0),
-                indicatorColor: Colors.transparent,
-              ),
-            ),
-          ),
-          backgroundColor: Colors.black,
+          floatingActionButton: buildFloatingActionButton(context, size),
+          bottomNavigationBar: buildBottomNavigationBar(),
+          backgroundColor: Colors.white.withOpacity(0.8),
         ),
       ),
     );
   }
 
-  Future<void> getCamera(BuildContext context) async {
-    // Obtain a list of the available cameras on the device.
-    final cameras = await availableCameras();
-    // Get a specific camera from the list of available cameras.
-    final firstCamera = cameras.first;
+  Container buildBottomNavigationBar() {
+    return Container(
+      padding: EdgeInsets.only(bottom: mediumPadding, top: smallPadding),
+      child: Container(
+        // color: Colors.black,
+        child: TabBar(
+          tabs: [
+            Tab(
+              icon: Icon(Icons.home),
+            ),
+            Tab(
+              icon: Icon(Icons.perm_identity),
+            ),
+            Tab(
+              icon: Hero(
+                  tag: '$heroTag',
+                  child: Container(
+                    height: mediumSize,
+                    width: mediumSize,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(user != null
+                                ? user.photoUrl
+                                : 'https://spng.pngfind.com/pngs/s/125-1256363_post-anime-girl-icon-transparent-hd-png-download.png')),
+                        color: Colors.black,
+                        shape: BoxShape.circle),
+                  )),
+            )
+          ],
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.black,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicatorPadding: EdgeInsets.all(verySmallPadding),
+          indicatorColor: Colors.transparent,
+        ),
+      ),
+    );
+  }
 
-    await Navigator.push<void>(context, FadeRoute(builder: (context) {
-      return CameraMainPage(
-        camera: firstCamera,
-      );
-    }));
+  FabCircularMenu buildFloatingActionButton(BuildContext context, Size size) {
+    return FabCircularMenu(
+        ringDiameter: size.width * 2 / 3,
+        ringColor: Colors.transparent,
+        fabOpenColor: Colors.grey,
+        fabCloseColor: Colors.blueGrey,
+        fabOpenIcon: Icon(Icons.camera_alt),
+        fabCloseIcon: Icon(
+          Icons.clear,
+        ),
+        children: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.camera,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                getCamera(context);
+              }),
+          IconButton(
+              icon: Icon(
+                Icons.photo_library,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                getGallery(context);
+              }),
+        ]);
+  }
+
+  Future<void> getCamera(BuildContext context) async {
+    await picker.getImage(source: ImageSource.camera).then((value) {
+      cropper(value.path).then((value) {
+        if (value != null) {
+          Navigator.push<void>(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  DisplayPicturePage(imagePath: value.path.toString()),
+            ),
+          );
+        }
+      });
+    });
+  }
+
+  Future<void> getGallery(BuildContext context) async {
+    await picker.getImage(source: ImageSource.gallery).then((value) {
+      if (value != null) {
+        Navigator.push<void>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DisplayPicturePage(imagePath: value.path),
+          ),
+        );
+      }
+      ;
+    });
+  }
+
+  Future<File> cropper(String path) async {
+    return await ImageCropper.cropImage(
+        sourcePath: path,
+        aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
   }
 }

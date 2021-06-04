@@ -6,7 +6,6 @@ class ImageNode {
   int index;
   Path path;
   Rect rect;
-  // ignore: undefined_class
   ui.Image image;
 
   int getXIndex(int level) {

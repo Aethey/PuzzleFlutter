@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui show instantiateImageCodec, Image;
+import 'package:image/image.dart' as img;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -32,14 +33,13 @@ class PuzzleUtil {
   }
 
   Future<ui.Image> getImage(Uint8List bytes) async {
-
-    var codec = await ui.instantiateImageCodec(bytes);
-    var frameInfo = await codec.getNextFrame();
+    Codec codec = await ui.instantiateImageCodec(bytes);
+    FrameInfo frameInfo = await codec.getNextFrame();
     return frameInfo.image;
   }
 
   Future<Uint8List> compressFile(File file) async {
-    var result = await FlutterImageCompress.compressWithFile(
+    Uint8List result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       quality: 50,
     );
@@ -49,14 +49,15 @@ class PuzzleUtil {
   }
 
   List<ImageNode> doTask() {
-    var list = <ImageNode>[];
-    for (var j = 0; j < level; j++) {
-      for (var i = 0; i < level; i++) {
-        if (j * level + i < level * level - 1) {
-          var node = ImageNode();
+    List<ImageNode> list = <ImageNode>[];
+    for (int j = 0; j < level; j++) {
+      for (int i = 0; i < level; i++) {
+        int index = j * level + i;
+        if (index < level * level - 1) {
+          ImageNode node = ImageNode();
           node.rect = getOkRectF(i, j);
-          node.index = j * level + i;
-          makeBitmap(node);
+          node.index = index;
+          makeBitmap(node, i, j);
           list.add(node);
         }
       }
@@ -69,29 +70,35 @@ class PuzzleUtil {
         baseX + eachWidth * i, baseY + eachWidth * j, eachWidth, eachWidth);
   }
 
-  void makeBitmap(ImageNode node) {
-    var i = node.getXIndex(level);
-    var j = node.getYIndex(level);
-
-    var rect = getShapeRect(i, j, eachBitmapWidth);
-    rect = rect.shift(
-        Offset(eachBitmapWidth.toDouble() * i, eachBitmapWidth.toDouble() * j));
-
-    var recorder = PictureRecorder();
-    var ww = eachBitmapWidth.toDouble();
-    var canvas = Canvas(recorder, Rect.fromLTWH(0.0, 0.0, ww, ww));
-
-    var rect2 = Rect.fromLTRB(0.0, 0.0, rect.width, rect.height);
-
-    var paint = Paint();
+  void makeBitmap(ImageNode node, int i, int j) {
+    Rect rect = getShapeRect(eachBitmapWidth.toDouble() * i,
+        eachBitmapWidth.toDouble() * j, eachBitmapWidth);
+    PictureRecorder recorder = PictureRecorder();
+    double ww = eachBitmapWidth.toDouble();
+    Canvas canvas = Canvas(recorder, Rect.fromLTWH(0.0, 0.0, ww, ww));
+    Rect rect2 = Rect.fromLTRB(0.0, 0.0, rect.width, rect.height);
+    Paint paint = Paint();
     canvas.drawImageRect(image, rect, rect2, paint);
     recorder.endRecording().toImage(ww.floor(), ww.floor()).then((value) {
       node.image = value;
     });
-    node.rect = getOkRectF(i, j);
   }
 
-  Rect getShapeRect(int i, int j, double width) {
-    return Rect.fromLTRB(0.0, 0.0, width, width);
+  Rect getShapeRect(double x, double y, double width) {
+    return Rect.fromLTRB(0.0 + x, 0.0 + y, width + x, width + y);
+  }
+
+  Future<Color> getColor(Uint8List bytes) async {
+    img.Image image = img.decodeImage(bytes);
+    int pixel32 = image.getPixel(100, 100);
+    int hex = toArgb(pixel32);
+
+    return Color(hex);
+  }
+
+  int toArgb(int argbColor) {
+    int r = (argbColor >> 16) & 0xFF;
+    int b = argbColor & 0xFF;
+    return (argbColor & 0xFF00FF00) | (b << 16) | r;
   }
 }

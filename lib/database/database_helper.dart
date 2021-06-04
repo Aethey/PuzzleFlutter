@@ -7,6 +7,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper.internal();
   static Database _db;
+
   factory DatabaseHelper() => _instance;
 
   DatabaseHelper.internal();
@@ -21,10 +22,10 @@ class DatabaseHelper {
   }
 
   Future<Database> initDb() async {
-    var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, Config.databaseName);
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, Config.databaseName);
 
-    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    Database db = await openDatabase(path, version: 1, onCreate: _onCreate);
     return db;
   }
 
@@ -35,7 +36,7 @@ class DatabaseHelper {
 
   Future<void> insertPuzzleMockData(PuzzleMockModel model) async {
     // Get a reference to the database.
-    var dbClient = await db;
+    Database dbClient = await db;
 
     // Insert the Dog into the correct table. Also specify the
     // `conflictAlgorithm`. In this case, if the same dog is inserted
@@ -48,7 +49,7 @@ class DatabaseHelper {
   }
 
   Future<String> getPuzzleMockModel(int id) async {
-    var dbClient = await db;
+    Database dbClient = await db;
     List<Map> result =
         await dbClient.query('PuzzleMockTable', where: '$id = 001');
 
