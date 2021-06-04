@@ -15,7 +15,7 @@ class GridItemWidget extends StatelessWidget {
   }
 
   Widget _buildImageView(String b64) {
-    var bytes = Base64Decoder().convert(b64);
+    Uint8List bytes = Base64Decoder().convert(b64);
     return GestureDetector(
       onTap: () {},
       child: Card(

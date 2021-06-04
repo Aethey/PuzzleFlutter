@@ -19,7 +19,7 @@ class CloudManager {
   Future<QuerySnapshot> getPuzzleFromCloud(
       String collectionID, String documentID) async {
     print('getPuzzleFromCloud');
-    var dc = await Firestore.instance
+    QuerySnapshot dc = await Firestore.instance
         .collection(collectionID)
         .document(documentID)
         .collection('puzzles')

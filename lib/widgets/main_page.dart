@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/widgets/user_info_page.dart';
 
 import 'camera/display_picture_page.dart';
-import 'home.dart';
+import 'home/home.dart';
 
 class MainPage extends StatelessWidget {
   final int heroTag;
@@ -18,15 +19,14 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    Size size = MediaQuery.of(context).size;
     return MaterialApp(
-      color: Colors.yellow,
+      debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           body: TabBarView(
             children: [
-              // LoginPage(),
               HomePage(),
               Container(
                 color: Colors.lightGreen,
@@ -34,9 +34,9 @@ class MainPage extends StatelessWidget {
               UserInfoPage(),
             ],
           ),
-          floatingActionButton: buildFloatingActionButton(context),
+          floatingActionButton: buildFloatingActionButton(context, size),
           bottomNavigationBar: buildBottomNavigationBar(),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.white.withOpacity(0.8),
         ),
       ),
     );
@@ -44,14 +44,11 @@ class MainPage extends StatelessWidget {
 
   Container buildBottomNavigationBar() {
     return Container(
-      padding: EdgeInsets.only(bottom: 20, top: 10),
+      padding: EdgeInsets.only(bottom: mediumPadding, top: smallPadding),
       child: Container(
-        color: Colors.black,
+        // color: Colors.black,
         child: TabBar(
           tabs: [
-            // Tab(
-            //   icon: Icon(Icons.home),
-            // ),
             Tab(
               icon: Icon(Icons.home),
             ),
@@ -62,8 +59,8 @@ class MainPage extends StatelessWidget {
               icon: Hero(
                   tag: '$heroTag',
                   child: Container(
-                    height: 30,
-                    width: 30,
+                    height: mediumSize,
+                    width: mediumSize,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.cover,
@@ -75,34 +72,40 @@ class MainPage extends StatelessWidget {
                   )),
             )
           ],
-          labelColor: Colors.yellow,
-          unselectedLabelColor: Colors.blue,
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.black,
           indicatorSize: TabBarIndicatorSize.label,
-          indicatorPadding: EdgeInsets.all(5.0),
+          indicatorPadding: EdgeInsets.all(verySmallPadding),
           indicatorColor: Colors.transparent,
         ),
       ),
     );
   }
 
-  FabCircularMenu buildFloatingActionButton(BuildContext context) {
+  FabCircularMenu buildFloatingActionButton(BuildContext context, Size size) {
     return FabCircularMenu(
-        ringDiameter: MediaQuery.of(context).size.width * 2 / 3,
+        ringDiameter: size.width * 2 / 3,
         ringColor: Colors.transparent,
-        fabOpenColor: Colors.white,
+        fabOpenColor: Colors.grey,
         fabCloseColor: Colors.blueGrey,
-        fabOpenIcon: Icon(Icons.menu),
+        fabOpenIcon: Icon(Icons.camera_alt),
         fabCloseIcon: Icon(
           Icons.clear,
         ),
         children: <Widget>[
           IconButton(
-              icon: Icon(Icons.camera),
+              icon: Icon(
+                Icons.camera,
+                color: Colors.white,
+              ),
               onPressed: () {
                 getCamera(context);
               }),
           IconButton(
-              icon: Icon(Icons.photo_library),
+              icon: Icon(
+                Icons.photo_library,
+                color: Colors.white,
+              ),
               onPressed: () {
                 getGallery(context);
               }),
