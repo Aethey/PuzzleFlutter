@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photopuzzle/common/constants.dart';
@@ -18,7 +19,8 @@ class PuzzleListPage extends StatefulWidget {
   }
 }
 
-class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClientMixin {
+class PuzzleListState extends State<PuzzleListPage>
+    with AutomaticKeepAliveClientMixin {
   final picker = ImagePicker();
   int puzzleTag = 0002;
   DocumentSnapshot<Object>? last;
@@ -72,7 +74,7 @@ class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClien
               return _buildNoneWidget(context);
             }
             // Loading Large
-            return _buildNoneWidget(context);
+            return _buildLoadingWidget(context);
           }
           return RefreshIndicator(
             backgroundColor: Colors.grey,
@@ -107,7 +109,11 @@ class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClien
                   Uint8List bytes =
                       Base64Decoder().convert(docs[i]['b64'] as String);
                   String id = docs[i].id;
-                  return animContainer(bytes, id, i);
+                  return animContainer(
+                      'https://images.unsplash.com/photo-1622834111134-078485a29f0a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80',
+                      bytes,
+                      id,
+                      i);
                 }),
           );
         },
@@ -125,7 +131,13 @@ class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClien
     );
   }
 
-  Widget animContainer(Uint8List bytes, String id, int index) {
+  Widget _buildLoadingWidget(BuildContext context) {
+    return Container(
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget animContainer(String imageUrl, Uint8List bytes, String id, int index) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(smallPadding),
@@ -134,6 +146,7 @@ class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClien
           id: id,
           bytes: bytes,
           index: index,
+          imageUrl: imageUrl,
         ),
       ),
     );
@@ -143,21 +156,27 @@ class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClien
     double maxScroll = _scrollController.position.maxScrollExtent;
     double currentScroll = _scrollController.position.pixels;
 
-    if (currentScroll > maxScroll - MediaQuery.of(context).size.height) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        _scrollController.addListener(() {
-          // scrolling
-        });
-        _scrollController.position.isScrollingNotifier.addListener(() {
-          if (!_scrollController.position.isScrollingNotifier.value) {
-            // stop
-            context.read(puzzleProvider.notifier).loadMore();
-          } else {
-            // start
-          }
-        });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _scrollController.addListener(() {
+        // scrolling
       });
-    }
+      _scrollController.position.isScrollingNotifier.addListener(() {
+        if (!_scrollController.position.isScrollingNotifier.value) {
+          // stop
+
+          if (currentScroll > maxScroll && !context.read(puzzleProvider).isLoading && _scrollController.position.extentAfter == 0 ) {
+            print(currentScroll);
+            print('?????');
+            print(maxScroll);
+            context.read(puzzleProvider.notifier).loadMore();
+          }
+        } else {
+          // start
+        }
+      });
+    });
+
+
   }
 
   @override

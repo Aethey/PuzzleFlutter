@@ -1,0 +1,37 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:photopuzzle/model/photo_entity.dart';
+import 'package:photopuzzle/widgets/login/components/my_loading_route.dart';
+import 'package:photopuzzle/widgets/puzzle/puzzle_detail_page.dart';
+
+class PhotoItem extends StatelessWidget {
+  const PhotoItem(this.index, this.photoEntity);
+
+  final PhotoEntity photoEntity;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: photoEntity.id,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push<void>(
+              context,
+              MyLoadingRoute<void>(
+                  duration: Duration(milliseconds: 500),
+                  builder: (context) => PuzzleDetailsPage(
+                        imageUrl: photoEntity.urls.regular,
+                        id: photoEntity.id,
+                      )));
+        },
+        child: CachedNetworkImage(
+          fit: BoxFit.cover,
+          imageUrl: photoEntity.urls.regular,
+          placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
+          errorWidget: (context, url, dynamic e) => Icon(Icons.error),
+        ),
+      ),
+    );
+  }
+}

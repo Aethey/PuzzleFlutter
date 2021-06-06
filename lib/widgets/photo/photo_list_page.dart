@@ -1,11 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photopuzzle/common/constants.dart';
-import 'package:photopuzzle/model/photo_entity.dart';
 import 'package:photopuzzle/states/provider/photo/photo_list_provider.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
+
+import 'components/photo_item.dart';
 
 final showAppBarProvider = StateProvider((ref) => true);
 final showCancelProvider = StateProvider((ref) => false);
@@ -167,7 +167,7 @@ class PhotoListState extends State<PhotoListPage>
                   ),
                 );
               }
-              return _Tile(i, photos[i]);
+              return PhotoItem(i, photos[i]);
             });
       },
     );
@@ -193,7 +193,9 @@ class PhotoListState extends State<PhotoListPage>
     double currentScroll = _scrollController.position.pixels;
     // use for loadMore
     // judge by current currentScroll distance
-    if (currentScroll > maxScroll - MediaQuery.of(context).size.height) {
+    if (currentScroll > maxScroll &&
+        !context.read(photoProvider).isLoading &&
+        _scrollController.position.extentAfter == 0) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         _scrollController.addListener(() {
           // scrolling
@@ -235,30 +237,4 @@ class PhotoListState extends State<PhotoListPage>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class IntSize {
-  const IntSize(this.width, this.height);
-
-  final int width;
-  final int height;
-}
-
-class _Tile extends StatelessWidget {
-  const _Tile(this.index, this.photoEntity);
-
-  final PhotoEntity photoEntity;
-
-  // final IntSize size;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      fit: BoxFit.cover,
-      imageUrl: photoEntity.urls.small,
-      placeholder: (context, url) => CircularProgressIndicator(),
-      errorWidget: (context, url, dynamic e) => Icon(Icons.error),
-    );
-  }
 }

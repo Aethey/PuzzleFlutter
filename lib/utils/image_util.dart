@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ImageUtil {
@@ -25,5 +25,11 @@ class ImageUtil {
     );
 
     return result!;
+  }
+
+  static Future<Uint8List> networkImageToBase64(String imageUrl) async {
+    http.Response response = await http.get(Uri.parse(imageUrl));
+    final bytes = response.bodyBytes;
+    return bytes;
   }
 }

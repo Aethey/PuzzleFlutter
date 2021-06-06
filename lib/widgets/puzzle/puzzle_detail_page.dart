@@ -1,17 +1,24 @@
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/components/my_circle_button.dart';
+import 'package:photopuzzle/utils/image_util.dart';
 import 'puzzle_play_page.dart';
 import '../login/components/my_loading_route.dart';
 
 class PuzzleDetailsPage extends StatelessWidget {
-  PuzzleDetailsPage({this.includeMarkAsDoneButton = true, required this.bytes, required this.id});
+  PuzzleDetailsPage(
+      {this.includeMarkAsDoneButton = true,
+      this.bytes,
+      required this.id,
+      required this.imageUrl});
 
   final bool includeMarkAsDoneButton;
-  final Uint8List bytes;
+  final Uint8List? bytes;
   final String id;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +29,19 @@ class PuzzleDetailsPage extends StatelessWidget {
           Container(
               width: size.width,
               height: size.height,
-              child: Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-          )),
-          buildBody(context, size)
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: imageUrl,
+                placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
+                errorWidget: (context, url, dynamic e) => Icon(Icons.error),
+              )),
+          _buildBody(context, size)
         ],
       ),
     );
   }
 
-  Widget buildBody(BuildContext context, Size size) {
+  Widget _buildBody(BuildContext context, Size size) {
     return Container(
       color: Colors.white.withOpacity(0.6),
       width: size.width,
@@ -67,9 +76,6 @@ class PuzzleDetailsPage extends StatelessWidget {
                   blurRadius: 5,
                   offset: Offset(0, 6)),
             ],
-            // image: DecorationImage(
-            //     fit: BoxFit.cover,
-            //     image: Image.asset('assets/images/small_board.jpg').image)
           ),
           margin: EdgeInsets.only(top: size.width / 8),
           width: size.width / 3,
@@ -151,8 +157,10 @@ class PuzzleDetailsPage extends StatelessWidget {
                   MyCircleButton(
                     width: size.width / 6,
                     text: 'O',
-                    press: () {
-                      startGame(context);
+                    press: () async {
+                      Uint8List bytes =
+                          await ImageUtil.networkImageToBase64(imageUrl);
+                      await startGame(context, bytes);
                     },
                   ),
                 ],
@@ -186,17 +194,24 @@ class PuzzleDetailsPage extends StatelessWidget {
               top: veryBigPadding * 2, left: bigPadding, right: bigPadding),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(25),
-            child: Image.memory(
-              bytes,
+            child: CachedNetworkImage(
               fit: BoxFit.cover,
+              imageUrl: imageUrl,
+              placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
+              errorWidget: (context, url, dynamic e) => Icon(Icons.error),
             ),
+
+            // Image.memory(
+            //   bytes,
+            //   fit: BoxFit.cover,
+            // ),
           ),
         ),
       ),
     );
   }
 
-  Future<void> startGame(BuildContext context) async {
+  Future<void> startGame(BuildContext context, Uint8List bytes) async {
     await Navigator.push<void>(
         context,
         MyLoadingRoute<void>(

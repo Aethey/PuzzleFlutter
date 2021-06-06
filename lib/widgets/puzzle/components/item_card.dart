@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photopuzzle/common/constants.dart';
+import 'package:photopuzzle/utils/image_util.dart';
 import 'package:photopuzzle/widgets/login/components/my_loading_route.dart';
 
 import '../puzzle_detail_page.dart';
@@ -13,13 +14,15 @@ class ItemCard extends StatelessWidget {
       required this.subtitle,
       required this.bytes,
       required this.id,
-      required this.index});
+      required this.index,
+      required this.imageUrl});
 
   final VoidCallback? openContainer;
   final String subtitle;
   final Uint8List bytes;
   final String id;
   final int index;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,7 @@ class ItemCard extends StatelessWidget {
             MyLoadingRoute<void>(
                 duration: Duration(milliseconds: 500),
                 builder: (context) => PuzzleDetailsPage(
+                      imageUrl: imageUrl,
                       bytes: bytes,
                       id: id,
                     )));
@@ -130,11 +134,10 @@ class ItemCard extends StatelessWidget {
         height: size.width - 32,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
-          child:
-          CachedNetworkImage(
+          child: CachedNetworkImage(
             fit: BoxFit.cover,
-            imageUrl: 'https://images.unsplash.com/photo-1622834111134-078485a29f0a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80',
-            placeholder: (context, url) => CircularProgressIndicator(),
+            imageUrl: imageUrl,
+            placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
             errorWidget: (context, url, dynamic e) => Icon(Icons.error),
           ),
 
