@@ -107,13 +107,10 @@ class PuzzleListState extends State<PuzzleListPage>
                   }
 
                   Uint8List bytes =
-                      Base64Decoder().convert(docs[i]['b64'] as String);
+                      Base64Decoder().convert(docs[i]['b64'].toString());
                   String id = docs[i].id;
                   return animContainer(
-                      'https://images.unsplash.com/photo-1622834111134-078485a29f0a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1268&q=80',
-                      bytes,
-                      id,
-                      i);
+                      docs[i]['imageUrl'].toString(), bytes, id, i);
                 }),
           );
         },
@@ -164,7 +161,9 @@ class PuzzleListState extends State<PuzzleListPage>
         if (!_scrollController.position.isScrollingNotifier.value) {
           // stop
 
-          if (currentScroll > maxScroll && !context.read(puzzleProvider).isLoading && _scrollController.position.extentAfter == 0 ) {
+          if (currentScroll > maxScroll &&
+              !context.read(puzzleProvider).isLoading &&
+              _scrollController.position.extentAfter == 0) {
             print(currentScroll);
             print('?????');
             print(maxScroll);
@@ -175,8 +174,6 @@ class PuzzleListState extends State<PuzzleListPage>
         }
       });
     });
-
-
   }
 
   @override

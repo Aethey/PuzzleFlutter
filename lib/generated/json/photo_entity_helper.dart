@@ -55,6 +55,7 @@ PhotoEntity photoEntityFromJson(PhotoEntity data, Map<String, dynamic> json) {
   return data;
 }
 
+
 Map<String, dynamic> photoEntityToJson(PhotoEntity entity) {
   final Map<String, dynamic> data = <String, dynamic>{};
   data['id'] = entity.id;

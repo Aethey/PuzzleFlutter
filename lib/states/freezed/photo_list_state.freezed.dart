@@ -19,6 +19,7 @@ class _$PhotoListStateTearOff {
   _PhotoListState call(
       {int page = 1,
       int per_page = 10,
+      String query = '',
       bool isLoading = true,
       bool isLoadMoreError = false,
       bool isLoadMoreDone = false,
@@ -26,6 +27,7 @@ class _$PhotoListStateTearOff {
     return _PhotoListState(
       page: page,
       per_page: per_page,
+      query: query,
       isLoading: isLoading,
       isLoadMoreError: isLoadMoreError,
       isLoadMoreDone: isLoadMoreDone,
@@ -41,6 +43,7 @@ const $PhotoListState = _$PhotoListStateTearOff();
 mixin _$PhotoListState {
   int get page => throw _privateConstructorUsedError;
   int get per_page => throw _privateConstructorUsedError;
+  String get query => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   bool get isLoadMoreError => throw _privateConstructorUsedError;
   bool get isLoadMoreDone => throw _privateConstructorUsedError;
@@ -59,6 +62,7 @@ abstract class $PhotoListStateCopyWith<$Res> {
   $Res call(
       {int page,
       int per_page,
+      String query,
       bool isLoading,
       bool isLoadMoreError,
       bool isLoadMoreDone,
@@ -78,6 +82,7 @@ class _$PhotoListStateCopyWithImpl<$Res>
   $Res call({
     Object? page = freezed,
     Object? per_page = freezed,
+    Object? query = freezed,
     Object? isLoading = freezed,
     Object? isLoadMoreError = freezed,
     Object? isLoadMoreDone = freezed,
@@ -92,6 +97,10 @@ class _$PhotoListStateCopyWithImpl<$Res>
           ? _value.per_page
           : per_page // ignore: cast_nullable_to_non_nullable
               as int,
+      query: query == freezed
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
       isLoading: isLoading == freezed
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -122,6 +131,7 @@ abstract class _$PhotoListStateCopyWith<$Res>
   $Res call(
       {int page,
       int per_page,
+      String query,
       bool isLoading,
       bool isLoadMoreError,
       bool isLoadMoreDone,
@@ -143,6 +153,7 @@ class __$PhotoListStateCopyWithImpl<$Res>
   $Res call({
     Object? page = freezed,
     Object? per_page = freezed,
+    Object? query = freezed,
     Object? isLoading = freezed,
     Object? isLoadMoreError = freezed,
     Object? isLoadMoreDone = freezed,
@@ -157,6 +168,10 @@ class __$PhotoListStateCopyWithImpl<$Res>
           ? _value.per_page
           : per_page // ignore: cast_nullable_to_non_nullable
               as int,
+      query: query == freezed
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
       isLoading: isLoading == freezed
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -183,6 +198,7 @@ class _$_PhotoListState extends _PhotoListState {
   const _$_PhotoListState(
       {this.page = 1,
       this.per_page = 10,
+      this.query = '',
       this.isLoading = true,
       this.isLoadMoreError = false,
       this.isLoadMoreDone = false,
@@ -195,6 +211,9 @@ class _$_PhotoListState extends _PhotoListState {
   @JsonKey(defaultValue: 10)
   @override
   final int per_page;
+  @JsonKey(defaultValue: '')
+  @override
+  final String query;
   @JsonKey(defaultValue: true)
   @override
   final bool isLoading;
@@ -209,7 +228,7 @@ class _$_PhotoListState extends _PhotoListState {
 
   @override
   String toString() {
-    return 'PhotoListState(page: $page, per_page: $per_page, isLoading: $isLoading, isLoadMoreError: $isLoadMoreError, isLoadMoreDone: $isLoadMoreDone, photos: $photos)';
+    return 'PhotoListState(page: $page, per_page: $per_page, query: $query, isLoading: $isLoading, isLoadMoreError: $isLoadMoreError, isLoadMoreDone: $isLoadMoreDone, photos: $photos)';
   }
 
   @override
@@ -221,6 +240,8 @@ class _$_PhotoListState extends _PhotoListState {
             (identical(other.per_page, per_page) ||
                 const DeepCollectionEquality()
                     .equals(other.per_page, per_page)) &&
+            (identical(other.query, query) ||
+                const DeepCollectionEquality().equals(other.query, query)) &&
             (identical(other.isLoading, isLoading) ||
                 const DeepCollectionEquality()
                     .equals(other.isLoading, isLoading)) &&
@@ -239,6 +260,7 @@ class _$_PhotoListState extends _PhotoListState {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(page) ^
       const DeepCollectionEquality().hash(per_page) ^
+      const DeepCollectionEquality().hash(query) ^
       const DeepCollectionEquality().hash(isLoading) ^
       const DeepCollectionEquality().hash(isLoadMoreError) ^
       const DeepCollectionEquality().hash(isLoadMoreDone) ^
@@ -254,6 +276,7 @@ abstract class _PhotoListState extends PhotoListState {
   const factory _PhotoListState(
       {int page,
       int per_page,
+      String query,
       bool isLoading,
       bool isLoadMoreError,
       bool isLoadMoreDone,
@@ -264,6 +287,8 @@ abstract class _PhotoListState extends PhotoListState {
   int get page => throw _privateConstructorUsedError;
   @override
   int get per_page => throw _privateConstructorUsedError;
+  @override
+  String get query => throw _privateConstructorUsedError;
   @override
   bool get isLoading => throw _privateConstructorUsedError;
   @override

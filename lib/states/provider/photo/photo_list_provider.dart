@@ -9,19 +9,19 @@ final photoProvider =
 
 class PhotoListNotifier extends StateNotifier<PhotoListState> {
   PhotoListNotifier() : super(PhotoListState()) {
-    _initList();
+    _initList(query: '');
   }
 
-  void _initList({int? initPage}) async {
+  void _initList({int? initPage,required String query}) async {
     final page = initPage ?? state.page;
-    final photos = await PhotoResponsibility().fetchPhotos(page: page);
+    final photos = await PhotoResponsibility().searchPhotos(page: page,query: query);
 
     // ignore: unnecessary_null_comparison
     if (photos == null) {
       state = state.copyWith(page: page, isLoading: false);
       return;
     }
-    state = state.copyWith(page: page, isLoading: false, photos: photos);
+    state = state.copyWith(page: page, isLoading: false, photos: photos,query: query);
   }
 
   void loadMore() async {
@@ -32,7 +32,7 @@ class PhotoListNotifier extends StateNotifier<PhotoListState> {
         isLoading: true, isLoadMoreDone: false, isLoadMoreError: false);
 
     final photos =
-        await PhotoResponsibility().fetchPhotos(page: state.page + 1);
+        await PhotoResponsibility().searchPhotos(page: state.page + 1,query: state.query);
 
     // ignore: unnecessary_null_comparison
     if (photos == null) {
@@ -52,7 +52,7 @@ class PhotoListNotifier extends StateNotifier<PhotoListState> {
     }
   }
 
-  Future<void> refresh() async {
-    _initList(initPage: 1);
+  Future<void> refresh(String query) async {
+    _initList(initPage: 1,query: query);
   }
 }

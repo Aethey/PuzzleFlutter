@@ -8,6 +8,7 @@ class PhotoListState with _$PhotoListState {
   const factory PhotoListState({
     @Default(1) int page,
     @Default(10) int per_page,
+    @Default('') String query,
     @Default(true) bool isLoading,
     @Default(false) bool isLoadMoreError,
     @Default(false) bool isLoadMoreDone,

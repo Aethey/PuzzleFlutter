@@ -89,6 +89,9 @@ class PhotoListState extends State<PhotoListPage>
                           color: Colors.black,
                         ),
                       ),
+                      onSubmitted: (value){
+                        context.read(photoProvider.notifier).refresh(value);
+                      },
                     ),
                   ),
                 ),
