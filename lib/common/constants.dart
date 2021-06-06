@@ -15,6 +15,7 @@ const veryBigPadding = 32.0;
 //
 const smallSize = 24.0;
 const mediumSize = 32.0;
+const bigSize = 56.0;
 
 //
 const mediumText = 24.0;

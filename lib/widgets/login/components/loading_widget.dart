@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key key, this.loginTag, this.color}) : super(key: key);
-  final int loginTag;
-  final Color color;
+  const LoadingWidget({Key? key, this.loginTag, this.color}) : super(key: key);
+  final int? loginTag;
+  final Color? color;
 
 
   @override

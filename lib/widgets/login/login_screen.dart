@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:photopuzzle/common/constants.dart';
-import 'package:photopuzzle/widgets/components/my_common_button.dart';
-
-import '../main_page.dart';
+import 'package:photopuzzle/components/my_common_button.dart';
+import '../main/main_page.dart';
 import 'components/my_loading_route.dart';
 
 final loginModeProvider = StateProvider((ref) => false);
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
   static int loginTag = 0001;
 
   static final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -23,12 +23,13 @@ class LoginScreen extends StatelessWidget {
 
   static const opacityCurve = Interval(0.0, 0.75, curve: Curves.fastOutSlowIn);
 
-  static final StreamController<FirebaseUser> _authStreamController =
-      StreamController<FirebaseUser>.broadcast();
+  static final StreamController<User> _authStreamController =
+      StreamController<User>.broadcast();
 
   Future<void> _handleLogin(BuildContext context) async {
+    await Firebase.initializeApp();
     if (!context.read(loginModeProvider).state) {
-      GoogleSignInAccount googleCurrentUser = _googleSignIn.currentUser;
+      GoogleSignInAccount? googleCurrentUser = _googleSignIn.currentUser;
 
       googleCurrentUser ??= await _googleSignIn.signInSilently();
       googleCurrentUser ??= await _googleSignIn.signIn();
@@ -36,11 +37,12 @@ class LoginScreen extends StatelessWidget {
         return null;
       }
 
-      GoogleSignInAuthentication googleAuth = await googleCurrentUser.authentication;
-      final credential = GoogleAuthProvider.getCredential(
+      GoogleSignInAuthentication googleAuth =
+          await googleCurrentUser.authentication;
+      final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       final user = (await _auth.signInWithCredential(credential)).user;
-      _authStreamController.add(user);
+      _authStreamController.add(user!);
     }
   }
 
@@ -159,12 +161,12 @@ class LoginScreen extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(smallPadding),
-        child: StreamBuilder<FirebaseUser>(
+        child: StreamBuilder<User>(
             stream: _authStreamController.stream,
             builder: (context, snapshot) {
               /// this is test mode without firebase auth
               if (context.read(loginModeProvider).state) {
-                SchedulerBinding.instance
+                SchedulerBinding.instance!
                     .addPostFrameCallback((timeStamp) async {
                   /// mock loading
                   await Future<void>.delayed(const Duration(seconds: 1));
@@ -172,8 +174,9 @@ class LoginScreen extends StatelessWidget {
                       context,
                       MyLoadingRoute<void>(
                           duration: Duration(milliseconds: 500),
-                          builder: (context) => MainPage(
+                          builder: (context) => PuzzleListPage(
                                 heroTag: loginTag,
+                                user: null,
                               )));
                 });
                 // custom loading text view
@@ -186,12 +189,12 @@ class LoginScreen extends StatelessWidget {
               } else if (snapshot.connectionState == ConnectionState.active &&
                       snapshot.data != null ||
                   snapshot.data == null) {
-                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
                   Navigator.pushReplacement(
                       context,
                       MyLoadingRoute<void>(
                           duration: Duration(milliseconds: 500),
-                          builder: (context) => MainPage(
+                          builder: (context) => PuzzleListPage(
                                 heroTag: loginTag,
                                 user: snapshot.data,
                               )));
@@ -199,7 +202,7 @@ class LoginScreen extends StatelessWidget {
                 // custom loading text view
                 return widgetLoginSuccess();
               } else {
-                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
                   Navigator.of(context).pop();
                 });
               }

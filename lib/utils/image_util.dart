@@ -19,12 +19,11 @@ class ImageUtil {
   }
 
   static Future<Uint8List> compressFile(File file) async {
-    Uint8List result = await FlutterImageCompress.compressWithFile(
+    Uint8List? result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       quality: 50,
     );
-    print(file.lengthSync());
-    print(result.length);
-    return result;
+
+    return result!;
   }
 }
