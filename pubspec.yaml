@@ -76,8 +76,8 @@ dependencies:
 #  https://github.com/flutterchina/dio/blob/master/README-ZH.md
   dio: ^4.0.0
   #  https://pub.dev/packages/mockito/install
-#  mockito: ^5.0.9
-#  #  https://flutter.cn/docs/cookbook/testing/unit/introduction
+  mockito: ^5.0.9
+#  https://flutter.cn/docs/cookbook/testing/unit/introduction
   test:
 
 

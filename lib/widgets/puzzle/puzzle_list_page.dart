@@ -11,14 +11,14 @@ import 'package:photopuzzle/states/provider/puzzle/puzzle_list_provider.dart';
 
 import 'components/item_card.dart';
 
-class HomePage extends StatefulWidget {
+class PuzzleListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return HomeState();
+    return PuzzleListState();
   }
 }
 
-class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class PuzzleListState extends State<PuzzleListPage> with AutomaticKeepAliveClientMixin {
   final picker = ImagePicker();
   int puzzleTag = 0002;
   DocumentSnapshot<Object>? last;
@@ -33,7 +33,7 @@ class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  void didUpdateWidget(HomePage oldWidget) {
+  void didUpdateWidget(PuzzleListPage oldWidget) {
     super.didUpdateWidget(oldWidget);
   }
 

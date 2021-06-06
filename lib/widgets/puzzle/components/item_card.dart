@@ -35,7 +35,7 @@ class ItemCard extends StatelessWidget {
             context,
             MyLoadingRoute<void>(
                 duration: Duration(milliseconds: 500),
-                builder: (context) => DetailsPage(
+                builder: (context) => PuzzleDetailsPage(
                       bytes: bytes,
                       id: id,
                     )));

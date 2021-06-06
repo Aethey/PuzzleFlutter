@@ -17,8 +17,13 @@ class PuzzleWidget extends StatefulWidget {
   final Size size;
   final Uint8List bytes;
   final int level;
+  final Function stopTimer;
 
-  PuzzleWidget(this.size, this.bytes, this.level);
+  PuzzleWidget(
+      {required this.size,
+      required this.bytes,
+      required this.level,
+      required this.stopTimer});
 
   @override
   State<StatefulWidget> createState() {
@@ -71,16 +76,14 @@ class PuzzleWidgetState extends State<PuzzleWidget>
         child: Text('Loading'),
       );
     } else if (gameState == GameState.complete) {
+      widget.stopTimer();
       return Center(
-          child: ElevatedButton(
-        onPressed: () {
-          PuzzleEngine.makeRandom(nodes);
-          setState(() {
-            gameState = GameState.play;
-          });
-          showStartAnimation();
-        },
-        child: Text('Restart'),
+          child: Column(
+        children: [
+          Container(
+            child: Image.memory(bytes),
+          ),
+        ],
       ));
     } else {
       return GestureDetector(

@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
       initialRoute: RouteName.Login,
       routes: {
         RouteName.Login: (context) => LoginScreen(),
-        RouteName.Main: (context) => PuzzleListPage(),
-        RouteName.Home: (context) => HomePage(),
+        RouteName.Main: (context) => MainPage(),
+        RouteName.Home: (context) => PuzzleListPage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

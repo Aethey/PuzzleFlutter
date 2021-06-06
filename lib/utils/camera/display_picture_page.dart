@@ -57,6 +57,6 @@ class DisplayPicturePage extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                GamePage(MediaQuery.of(context).size, bytes, 3)));
+                PuzzlePlayPage(MediaQuery.of(context).size, bytes, 3)));
   }
 }

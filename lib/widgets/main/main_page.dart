@@ -11,12 +11,12 @@ import 'package:photopuzzle/widgets/puzzle/puzzle_list_page.dart';
 import 'package:photopuzzle/widgets/user/user_info_page.dart';
 
 
-class PuzzleListPage extends StatelessWidget {
+class MainPage extends StatelessWidget {
   final int? heroTag;
   final User? user;
   final picker = ImagePicker();
 
-  PuzzleListPage({Key? key, this.heroTag, this.user}) : super(key: key);
+  MainPage({Key? key, this.heroTag, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class PuzzleListPage extends StatelessWidget {
         child: Scaffold(
           body: TabBarView(
             children: [
-              HomePage(),
+              PuzzleListPage(),
               PhotoListPage(),
               UserInfoPage(),
             ],

@@ -6,8 +6,8 @@ import 'package:photopuzzle/components/my_circle_button.dart';
 import 'puzzle_play_page.dart';
 import '../login/components/my_loading_route.dart';
 
-class DetailsPage extends StatelessWidget {
-  DetailsPage({this.includeMarkAsDoneButton = true, required this.bytes, required this.id});
+class PuzzleDetailsPage extends StatelessWidget {
+  PuzzleDetailsPage({this.includeMarkAsDoneButton = true, required this.bytes, required this.id});
 
   final bool includeMarkAsDoneButton;
   final Uint8List bytes;
@@ -202,6 +202,6 @@ class DetailsPage extends StatelessWidget {
         MyLoadingRoute<void>(
             duration: Duration(milliseconds: 500),
             builder: (context) =>
-                GamePage(MediaQuery.of(context).size, bytes, 3)));
+                PuzzlePlayPage(MediaQuery.of(context).size, bytes, 3)));
   }
 }

@@ -8,12 +8,12 @@ import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/utils/puzzle/puzzle_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
-class GamePage extends StatelessWidget {
+class PuzzlePlayPage extends StatelessWidget {
   final Size size;
   final Uint8List bytes;
   final int level;
 
-  GamePage(this.size, this.bytes, this.level);
+  PuzzlePlayPage(this.size, this.bytes, this.level);
 
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
 
@@ -81,7 +81,9 @@ class GamePage extends StatelessWidget {
   Widget _buildGameBoard(Size size) {
     return Container(
       height: size.width,
-      child: PuzzleWidget(size, bytes, level),
+      child: PuzzleWidget(size:size, bytes:bytes, level:level,stopTimer: (){
+        _stopWatchTimer.dispose();
+      },),
     );
   }
 

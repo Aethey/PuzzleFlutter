@@ -174,7 +174,7 @@ class LoginScreen extends StatelessWidget {
                       context,
                       MyLoadingRoute<void>(
                           duration: Duration(milliseconds: 500),
-                          builder: (context) => PuzzleListPage(
+                          builder: (context) => MainPage(
                                 heroTag: loginTag,
                                 user: null,
                               )));
@@ -194,7 +194,7 @@ class LoginScreen extends StatelessWidget {
                       context,
                       MyLoadingRoute<void>(
                           duration: Duration(milliseconds: 500),
-                          builder: (context) => PuzzleListPage(
+                          builder: (context) => MainPage(
                                 heroTag: loginTag,
                                 user: snapshot.data,
                               )));
