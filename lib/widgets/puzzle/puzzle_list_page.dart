@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/states/provider/puzzle/puzzle_list_provider.dart';
 
@@ -61,11 +60,11 @@ class PuzzleListState extends State<PuzzleListPage>
           image: DecorationImage(
               fit: BoxFit.cover,
               image: Image.asset('assets/images/bg_puzzle.jpg').image)),
-      child: _buildImageList(),
+      child: _buildImageList(context),
     );
   }
 
-  Widget _buildImageList() {
+  Widget _buildImageList(BuildContext context) {
     return Container(
       child: Consumer(
         builder: (context, watch, _) {
@@ -86,8 +85,8 @@ class PuzzleListState extends State<PuzzleListPage>
 
           /// use for push to refresh
           return RefreshIndicator(
-            backgroundColor: Colors.grey,
-            color: Colors.white,
+            backgroundColor: Theme.of(context).shadowColor,
+            color: Theme.of(context).primaryColor,
             onRefresh: () => context.read(puzzleProvider.notifier).refresh(),
             child: ListView.builder(
                 controller: _scrollController,
@@ -113,8 +112,8 @@ class PuzzleListState extends State<PuzzleListPage>
                       // width: MediaQuery.of(context).size.width,
                       // padding: EdgeInsets.symmetric(horizontal: mediumPadding),
                       child: CircularProgressIndicator(
-                        backgroundColor: Colors.grey,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        backgroundColor: Theme.of(context).shadowColor,
+                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                       ),
                     );
                   }

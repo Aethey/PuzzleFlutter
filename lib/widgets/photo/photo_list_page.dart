@@ -91,7 +91,7 @@ class PhotoListState extends State<PhotoListPage>
                         EdgeInsets.only(right: smallPadding, top: smallPadding),
                     child: TextField(
                       focusNode: _focusNode,
-                      cursorColor: Colors.black,
+                      cursorColor: Theme.of(context).accentColor,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
@@ -100,7 +100,7 @@ class PhotoListState extends State<PhotoListPage>
                         disabledBorder: InputBorder.none,
                         prefixIcon: Icon(
                           Icons.search_rounded,
-                          color: Colors.black,
+                          color: Theme.of(context).accentColor,
                         ),
                       ),
                       onSubmitted: (value) {
@@ -134,7 +134,7 @@ class PhotoListState extends State<PhotoListPage>
           style: TextStyle(
               fontSize: mediumText,
               fontWeight: FontWeight.bold,
-              color: Colors.black),
+              color: Theme.of(context).accentColor),
         ),
       ),
     );
@@ -181,8 +181,8 @@ class PhotoListState extends State<PhotoListPage>
                 }
                 return Center(
                   child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    backgroundColor: Theme.of(context).shadowColor,
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                   ),
                 );
               }

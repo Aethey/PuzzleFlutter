@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildIcon(size),
+          _buildIcon(context,size),
           _buildSwitch(context),
           _buildButton(context, size)
         ],
@@ -129,10 +129,10 @@ class LoginScreen extends StatelessWidget {
                 onChanged: (value) {
                   context.read(loginModeProvider).state = value;
                 },
-                inactiveThumbColor: Colors.grey,
-                inactiveTrackColor: Colors.white,
-                activeColor: Colors.grey,
-                activeTrackColor: Colors.black,
+                inactiveThumbColor: Theme.of(context).shadowColor,
+                inactiveTrackColor: Theme.of(context).primaryColor,
+                activeColor: Theme.of(context).shadowColor,
+                activeTrackColor: Theme.of(context).accentColor,
               );
             },
           ),
@@ -145,13 +145,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIcon(Size size) {
+  Widget _buildIcon(BuildContext context,Size size) {
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
             offset: Offset(0, 10),
             blurRadius: 50,
-            color: Colors.black.withOpacity(0.2))
+            color: Theme.of(context).accentColor.withOpacity(0.2))
       ]),
       height: size.height / 8,
       width: size.height / 8,

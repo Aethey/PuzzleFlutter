@@ -87,11 +87,15 @@ dev_dependencies:
   floor_generator: ^1.1.0
   build_runner:
   freezed: ^0.14.2
+  flutter_launcher_icons: ^0.9.0
 # over
   flutter_test:
     sdk: flutter
 
-
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app/puzzle_icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

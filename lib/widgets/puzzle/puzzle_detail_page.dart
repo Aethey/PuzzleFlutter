@@ -41,11 +41,11 @@ class PuzzleDetailsPage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, Size size) {
     return Container(
-      color: Colors.white.withOpacity(0.6),
+      color: Theme.of(context).primaryColor.withOpacity(0.6),
       width: size.width,
       child: Column(
         children: <Widget>[
-          _buildImage(size),
+          _buildImage(context,size),
           Container(
             margin: EdgeInsets.symmetric(horizontal: smallPadding),
             child: Row(
@@ -69,7 +69,7 @@ class PuzzleDetailsPage extends StatelessWidget {
             color: Color(0xFFcec89f),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Theme.of(context).accentColor.withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 5,
                   offset: Offset(0, 6)),
@@ -82,9 +82,9 @@ class PuzzleDetailsPage extends StatelessWidget {
             padding:
                 EdgeInsets.only(top: 0.0, left: verySmallPadding, bottom: 0.0),
             children: [
-              _buildRankItem(size),
-              _buildRankItem(size),
-              _buildRankItem(size),
+              _buildRankItem(context,size),
+              _buildRankItem(context,size),
+              _buildRankItem(context,size),
             ],
           ),
         ),
@@ -101,7 +101,7 @@ class PuzzleDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRankItem(Size size) {
+  Widget _buildRankItem(BuildContext context,Size size) {
     return Container(
       margin: EdgeInsets.only(top: mediumPadding),
       child: Row(
@@ -120,7 +120,7 @@ class PuzzleDetailsPage extends StatelessWidget {
             style: TextStyle(
                 fontSize: mediumText,
                 fontWeight: FontWeight.bold,
-                color: Colors.black),
+                color: Theme.of(context).accentColor),
           )
         ],
       ),
@@ -170,7 +170,7 @@ class PuzzleDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(Size size) {
+  Widget _buildImage(BuildContext context,Size size) {
     return Hero(
       tag: '$id',
       child: Transform(
@@ -183,7 +183,7 @@ class PuzzleDetailsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Theme.of(context).accentColor.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 5,
                     offset: Offset(10, -6)),

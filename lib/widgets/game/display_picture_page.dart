@@ -37,7 +37,7 @@ class DisplayPicturePage extends StatelessWidget {
 
   Widget _buildBody(Size size, BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Theme.of(context).accentColor.withOpacity(0.8),
       child: Column(
         children: <Widget>[
           Container(

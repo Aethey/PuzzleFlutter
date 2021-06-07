@@ -32,8 +32,8 @@ class MyCommonButton extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline5!.copyWith(
                     fontWeight: FontWeight.bold,
                     color: watch(loginModeProvider).state
-                        ? Colors.black
-                        : Colors.white),
+                        ? Theme.of(context).accentColor
+                        : Theme.of(context).primaryColor),
               );
             },
           )),

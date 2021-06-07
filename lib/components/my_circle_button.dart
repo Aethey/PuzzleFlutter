@@ -17,13 +17,13 @@ class MyCircleButton extends StatelessWidget {
         child: TextButton(
           onPressed: () => press(),
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.black),
+              backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor),
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(width / 2))))),
           child: Text(text,
               style: Theme.of(context).textTheme.headline5!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                   )),
         ));
   }

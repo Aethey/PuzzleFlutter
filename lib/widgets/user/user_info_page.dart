@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photopuzzle/common/constants.dart';
+
+import '../../my_app.dart';
 
 class UserInfoPage extends StatefulWidget {
   final User? user;
@@ -16,64 +19,155 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class UserInfoState extends State<UserInfoPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final User? user;
-
-  static List<String> mockSetTextList = [
-    'DarkMode',
-    'DataBase',
-    'X',
-    'X',
-    'X',
-    'X',
-    'X',
-    'X',
-    'X'
-  ];
 
   UserInfoState(this.user);
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Column(
+      body: _buildBody(context, size),
+    );
+  }
+
+  Column _buildBody(BuildContext context, Size size) {
+    return Column(
+      children: [
+        _buildTitle(context, '${user == null ? 'Test' : user!.displayName}'),
+        Expanded(
+            child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: mediumPadding),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildIcon(size),
+                    Spacer(),
+                    Container(
+                      width: size.width / 2,
+                      margin: EdgeInsets.only(right: bigPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildText('0', 'Puzzle'),
+                          _buildText('0', 'Friend'),
+                          _buildText('o', 'Like'),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                width: size.width,
+                height: size.width / 3,
+                padding: EdgeInsets.only(left: smallPadding),
+                child: Row(
+                  children: [_buildDarkModeSwitch(context)],
+                ),
+              ),
+              Center(
+                child: Text('there is nothing...'),
+              )
+            ],
+          ),
+        ))
+      ],
+    );
+  }
+
+  Widget _buildDarkModeSwitch(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.wb_sunny,
+          color: Theme.of(context).accentColor,
+        ),
+        Container(
+          child: Consumer(
+            builder: (context, watch, _) {
+              return Switch(
+                value: watch(DarkModeProvider).state,
+                onChanged: (value) {
+                  context.read(DarkModeProvider).state = value;
+                },
+                inactiveThumbColor: Theme.of(context).primaryColor,
+                inactiveTrackColor: Theme.of(context).primaryColor,
+                activeColor: Theme.of(context).accentColor,
+                activeTrackColor: Theme.of(context).accentColor,
+              );
+            },
+          ),
+        ),
+        Icon(
+          Icons.nightlight_round,
+          color: Theme.of(context).accentColor,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildText(String title, String value) {
+    return Column(children: [
+      Text('$title',
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).accentColor)),
+      Text('$value',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+    ]);
+  }
+
+  Widget _buildIcon(Size size) {
+    return Container(
+      margin: EdgeInsets.only(left: mediumPadding),
+      height: bigSize,
+      width: bigSize,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(user != null
+                  ? user!.photoURL!
+                  : 'https://spng.pngfind.com/pngs/s/125-1256363_post-anime-girl-icon-transparent-hd-png-download.png')),
+          color: Theme.of(context).accentColor,
+          shape: BoxShape.circle),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context, String useName) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: mediumText * 2, left: mediumPadding, right: mediumPadding),
+      child: Row(
         children: [
-          _buildInfoWidget(context, size),
-          _buildGridWidget(context),
+          Text(
+            '$useName',
+            style: Theme.of(context)
+                .textTheme
+                .headline5!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          Spacer(),
+          SvgPicture.asset('assets/icons/menu.svg', width: mediumSize),
+          SizedBox(
+            width: mediumPadding,
+          ),
+          SvgPicture.asset('assets/icons/plus.svg', width: mediumSize)
         ],
       ),
-    );
-  }
-
-  Widget _buildInfoWidget(BuildContext context, Size size) {
-    return Container(
-      width: size.width,
-      height: size.height / 5,
-      child: Image.asset(
-        'assets/images/banner.jpg',
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
-  Widget _buildGridWidget(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 4 / 5,
-      height: MediaQuery.of(context).size.height / 2,
-      alignment: Alignment.center,
-      child: GridView.builder(
-          itemCount: 9,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
-          itemBuilder: (context, index) {
-            return Container(
-              color: Colors.black12,
-              child: Center(
-                child: Text(mockSetTextList[index]),
-              ),
-            );
-          }),
     );
   }
 

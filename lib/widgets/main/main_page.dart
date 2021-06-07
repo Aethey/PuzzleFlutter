@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photopuzzle/common/constants.dart';
@@ -9,6 +10,8 @@ import 'package:photopuzzle/widgets/game/display_picture_page.dart';
 import 'package:photopuzzle/widgets/photo/photo_list_page.dart';
 import 'package:photopuzzle/widgets/puzzle/puzzle_list_page.dart';
 import 'package:photopuzzle/widgets/user/user_info_page.dart';
+
+final tabBarIndexProvider = StateProvider((ref) => 0);
 
 /// main page
 class MainPage extends StatelessWidget {
@@ -24,38 +27,52 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
+    return Scaffold(
+      body: DefaultTabController(
         length: 3,
         child: Scaffold(
           body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             children: [
               PuzzleListPage(),
               PhotoListPage(),
               UserInfoPage(user: user),
             ],
           ),
-          floatingActionButton: buildFloatingActionButton(context, size),
-          bottomNavigationBar: buildBottomNavigationBar(),
-          backgroundColor: Colors.white.withOpacity(0.8),
+          floatingActionButton: Consumer(
+            builder: (context, watch, _) {
+              if (watch(tabBarIndexProvider).state == 2) {
+                return SizedBox(
+                  width: 1,
+                  height: 1,
+                );
+              }
+              return buildFloatingActionButton(context, size);
+            },
+          ),
+          bottomNavigationBar: buildBottomNavigationBar(context),
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
         ),
       ),
     );
   }
 
-  Widget buildBottomNavigationBar() {
+  Widget buildBottomNavigationBar(BuildContext context) {
     return Container(
+      color: Theme.of(context).primaryColor,
       padding: EdgeInsets.only(bottom: mediumPadding, top: smallPadding),
       child: Container(
         // color: Colors.black,
         child: TabBar(
+          onTap: (int index) {
+            context.read(tabBarIndexProvider).state = index;
+          },
           tabs: [
             Tab(
               icon: Icon(Icons.home),
             ),
             Tab(
-              icon: Icon(Icons.perm_identity),
+              icon: Icon(Icons.search_rounded),
             ),
             Tab(
               icon: Hero(
@@ -69,13 +86,13 @@ class MainPage extends StatelessWidget {
                             image: NetworkImage(user != null
                                 ? user!.photoURL!
                                 : 'https://spng.pngfind.com/pngs/s/125-1256363_post-anime-girl-icon-transparent-hd-png-download.png')),
-                        color: Colors.black,
+                        color: Theme.of(context).accentColor,
                         shape: BoxShape.circle),
                   )),
             )
           ],
-          labelColor: Colors.blue,
-          unselectedLabelColor: Colors.black,
+          labelColor: Colors.blueAccent,
+          unselectedLabelColor: Theme.of(context).accentColor,
           indicatorSize: TabBarIndicatorSize.label,
           indicatorPadding: EdgeInsets.all(verySmallPadding),
           indicatorColor: Colors.transparent,
@@ -90,9 +107,12 @@ class MainPage extends StatelessWidget {
         key: fabKey,
         ringDiameter: size.width * 2 / 3,
         ringColor: Colors.transparent,
-        fabOpenColor: Colors.grey,
-        fabCloseColor: Colors.blueGrey,
-        fabOpenIcon: Icon(Icons.camera_alt),
+        fabOpenColor: Theme.of(context).primaryColor,
+        fabCloseColor: Theme.of(context).primaryColor,
+        fabOpenIcon: Icon(
+          Icons.camera_alt,
+          color: Theme.of(context).accentColor,
+        ),
         fabCloseIcon: Icon(
           Icons.clear,
         ),
@@ -100,7 +120,7 @@ class MainPage extends StatelessWidget {
           IconButton(
               icon: Icon(
                 Icons.camera,
-                color: Colors.white,
+                color: Colors.blueAccent,
               ),
               onPressed: () {
                 if (fabKey.currentState!.isOpen) {
@@ -111,7 +131,7 @@ class MainPage extends StatelessWidget {
           IconButton(
               icon: Icon(
                 Icons.photo_library,
-                color: Colors.white,
+                color: Colors.blueAccent,
               ),
               onPressed: () {
                 if (fabKey.currentState!.isOpen) {
@@ -125,7 +145,7 @@ class MainPage extends StatelessWidget {
   /// go to camera,need permission
   Future<void> getCamera(BuildContext context) async {
     await picker.getImage(source: ImageSource.camera).then((value) {
-      cropper(value!.path).then((value) {
+      cropper(context, value!.path).then((value) {
         if (value != null) {
           Navigator.push<void>(
             context,
@@ -143,7 +163,7 @@ class MainPage extends StatelessWidget {
   Future<void> getGallery(BuildContext context) async {
     await picker.getImage(source: ImageSource.gallery).then((value) {
       if (value != null) {
-        cropper(value.path).then((value) {
+        cropper(context, value.path).then((value) {
           if (value != null) {
             Navigator.push<void>(
               context,
@@ -159,14 +179,14 @@ class MainPage extends StatelessWidget {
   }
 
   /// get image from camera or library,then crop it for use
-  Future<File?> cropper(String path) async {
+  Future<File?> cropper(BuildContext context, String path) async {
     return await ImageCropper.cropImage(
         sourcePath: path,
         aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
         androidUiSettings: AndroidUiSettings(
             toolbarTitle: 'Cropper',
             toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
+            toolbarWidgetColor: Theme.of(context).primaryColor,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(

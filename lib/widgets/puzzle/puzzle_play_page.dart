@@ -30,7 +30,7 @@ class PuzzlePlayPage extends StatelessWidget {
         children: [
           FloatingActionButton(
             heroTag: 'float',
-            backgroundColor: Colors.black,
+            backgroundColor: Theme.of(context).accentColor,
             onPressed: () {
               context.read(numberVisibleProvider).state ^= true;
               ;
@@ -39,14 +39,14 @@ class PuzzlePlayPage extends StatelessWidget {
               'assets/icons/point.svg',
               width: smallSize,
               height: smallSize,
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
             ),
           ),
           SizedBox(
             width: smallSize,
           ),
           FloatingActionButton(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).primaryColor,
             onPressed: () {
               Navigator.of(context).pop();
             },
