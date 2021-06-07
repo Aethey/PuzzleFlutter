@@ -1,16 +1,14 @@
 # photopuzzle
 
-a project about puzzle
+a flutter demo 
 
-## Getting Started
+Architectural: [MVU](https://buildflutter.com/functional-model-view-update-architecture-for-flutter/)
+<br>CI:GitAction
+<br>Backend: Firebase {[google_sign_in](https://pub.dev/packages/google_sign_in),[cloud_firestore](https://pub.dev/packages/cloud_firestore),[firebase_storage](https://pub.dev/packages/firebase_storage)}
+<br>Http: [dio](https://pub.dev/packages?q=dio)
+<br>State: [flutter_riverpod](https://pub.dev/packages/flutter_riverpod),[freezed](https://pub.dev/packages/freezed)
+<br>test: [mockito](https://pub.dev/packages/mockito/install)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
