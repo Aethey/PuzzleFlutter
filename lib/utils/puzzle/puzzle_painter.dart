@@ -53,7 +53,7 @@ class PuzzlePainter extends CustomPainter {
         canvas.drawImageRect(node.image!, srcRect, rect2, mPaint);
       }
     }
-
+    // control index visibility
     if (showNum) {
       for (PuzzleNode node in nodes) {
         ParagraphBuilder pb = ParagraphBuilder(ParagraphStyle(

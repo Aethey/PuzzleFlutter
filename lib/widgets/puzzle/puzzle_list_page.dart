@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +9,7 @@ import 'package:photopuzzle/states/provider/puzzle/puzzle_list_provider.dart';
 
 import 'components/item_card.dart';
 
+/// puzzle image list page
 class PuzzleListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -21,10 +19,18 @@ class PuzzleListPage extends StatefulWidget {
 
 class PuzzleListState extends State<PuzzleListPage>
     with AutomaticKeepAliveClientMixin {
-  final picker = ImagePicker();
+  /// use for hero animation
   int puzzleTag = 0002;
+
+  /// the puzzle image list data
+  /// get from firebase
   DocumentSnapshot<Object>? last;
+
+  /// puzzle listview ScrollController
   static late ScrollController _scrollController;
+
+  /// last request list length
+  /// Judging for loadMore timing
   int oldLength = 0;
 
   @override
@@ -63,6 +69,7 @@ class PuzzleListState extends State<PuzzleListPage>
     return Container(
       child: Consumer(
         builder: (context, watch, _) {
+          // puzzle listView state
           final isLoadMoreError = watch(puzzleProvider).isLoadMoreError;
           final isLoadMoreDone = watch(puzzleProvider).isLoadMoreDone;
           final isLoading = watch(puzzleProvider).isLoading;
@@ -76,6 +83,8 @@ class PuzzleListState extends State<PuzzleListPage>
             // Loading Large
             return _buildLoadingWidget(context);
           }
+
+          /// use for push to refresh
           return RefreshIndicator(
             backgroundColor: Colors.grey,
             color: Colors.white,
@@ -97,7 +106,7 @@ class PuzzleListState extends State<PuzzleListPage>
                       );
                     }
 
-                    if(docs.length < 4){
+                    if (docs.length < 4) {
                       return Container();
                     }
                     return Center(
@@ -110,8 +119,7 @@ class PuzzleListState extends State<PuzzleListPage>
                     );
                   }
                   String id = docs[i].id;
-                  return animContainer(
-                      docs[i]['imageUrl'].toString(), id, i);
+                  return itemContainer(docs[i]['imageUrl'].toString(), id, i);
                 }),
           );
         },
@@ -119,6 +127,7 @@ class PuzzleListState extends State<PuzzleListPage>
     );
   }
 
+  /// if none then show
   Widget _buildNoneWidget(BuildContext context) {
     return Container(
       child: Center(
@@ -129,18 +138,19 @@ class PuzzleListState extends State<PuzzleListPage>
     );
   }
 
+  /// if need loading then show
   Widget _buildLoadingWidget(BuildContext context) {
     return Container(
       child: Center(child: CircularProgressIndicator()),
     );
   }
 
-  Widget animContainer(String imageUrl, String id, int index) {
+  /// list item widget
+  Widget itemContainer(String imageUrl, String id, int index) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(smallPadding),
         child: ItemCard(
-          subtitle: 'Secondary text',
           id: id,
           index: index,
           imageUrl: imageUrl,
@@ -149,6 +159,8 @@ class PuzzleListState extends State<PuzzleListPage>
     );
   }
 
+  /// listen scroll state
+  /// use for loadMore
   void _scrollListener() {
     double maxScroll = _scrollController.position.maxScrollExtent;
     double currentScroll = _scrollController.position.pixels;
@@ -159,14 +171,11 @@ class PuzzleListState extends State<PuzzleListPage>
       });
       _scrollController.position.isScrollingNotifier.addListener(() {
         if (!_scrollController.position.isScrollingNotifier.value) {
+          /// if listview scroll stop and scroll distance > maxScroll
           // stop
-
           if (currentScroll > maxScroll &&
               !context.read(puzzleProvider).isLoading &&
               _scrollController.position.extentAfter == 0) {
-            print(currentScroll);
-            print('?????');
-            print(maxScroll);
             context.read(puzzleProvider.notifier).loadMore();
           }
         } else {

@@ -1,10 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:photopuzzle/api/firebase/firebase_storage_manager.dart';
+import 'package:photopuzzle/common/constants.dart';
 
-class UserInfoPage extends StatelessWidget {
-  List<String> mockSetTextList = [
+class UserInfoPage extends StatefulWidget {
+  final User? user;
+
+  const UserInfoPage({Key? key, this.user}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => UserInfoState(
+        user,
+      );
+}
+
+class UserInfoState extends State<UserInfoPage>
+    with AutomaticKeepAliveClientMixin {
+  final User? user;
+
+  static List<String> mockSetTextList = [
     'DarkMode',
     'DataBase',
     'X',
@@ -16,30 +31,29 @@ class UserInfoPage extends StatelessWidget {
     'X'
   ];
 
+  UserInfoState(this.user);
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('USERINFO'),
-      ),
       body: Column(
         children: [
-          _buildInfoWidget(context),
+          _buildInfoWidget(context, size),
           _buildGridWidget(context),
-          ElevatedButton(
-              onPressed: () async {
-                    await FirebaseStorageManager().downloadFileExample();
-              },
-              child: SvgPicture.asset('assets/icons/point.svg'))
         ],
       ),
     );
   }
 
-  Widget _buildInfoWidget(BuildContext context) {
+  Widget _buildInfoWidget(BuildContext context, Size size) {
     return Container(
-      height: MediaQuery.of(context).size.height / 5,
+      width: size.width,
+      height: size.height / 5,
+      child: Image.asset(
+        'assets/images/banner.jpg',
+        fit: BoxFit.cover,
+      ),
     );
   }
 
@@ -62,4 +76,7 @@ class UserInfoPage extends StatelessWidget {
           }),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

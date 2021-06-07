@@ -11,12 +11,21 @@ import 'puzzle_engine.dart';
 import 'puzzle_painter.dart';
 import 'puzzle_node.dart';
 
+/// use for control show or hide num in puzzle node
 final numberVisibleProvider = StateProvider((ref) => true);
 
+/// puzzle widget
 class PuzzleWidget extends StatefulWidget {
+  // screen size
   final Size size;
+
+  // image data
   final Uint8List bytes;
+
+  // puzzle leve,default 3 * 3
   final int level;
+
+  // control timer
   final Function stopTimer;
 
   PuzzleWidget(
@@ -37,6 +46,7 @@ class PuzzleWidgetState extends State<PuzzleWidget>
   PuzzleUtil? puzzleUtil;
   late List<PuzzleNode> nodes;
 
+  /// control animation when node move
   Animation<int>? alpha;
   AnimationController? controller;
   Map<int, PuzzleNode>? nodeMap = {};
@@ -89,7 +99,7 @@ class PuzzleWidgetState extends State<PuzzleWidget>
       return GestureDetector(
         onPanDown: onPanDown,
         onPanUpdate: onPanUpdate,
-        onPanEnd: onPanUp,
+        onPanEnd: onPanEnd,
         child: Container(
           child: Consumer(
             builder: (context, watch, _) {
@@ -125,6 +135,9 @@ class PuzzleWidgetState extends State<PuzzleWidget>
     super.dispose();
   }
 
+  /// when game start
+  /// random sort node index over
+  /// move node to its position in widget(level * level)
   void showStartAnimation() {
     needDraw = true;
     controller = AnimationController(
@@ -162,6 +175,7 @@ class PuzzleWidgetState extends State<PuzzleWidget>
     controller!.forward();
   }
 
+  /// touch screen  ready to move
   void onPanDown(DragDownDetails details) {
     if (controller!.isAnimating) {
       return;
@@ -186,6 +200,7 @@ class PuzzleWidgetState extends State<PuzzleWidget>
     }
   }
 
+  /// move
   void onPanUpdate(DragUpdateDetails details) {
     if (hitNode == null) {
       return;
@@ -207,7 +222,10 @@ class PuzzleWidgetState extends State<PuzzleWidget>
     setState(() {});
   }
 
-  void onPanUp(DragEndDetails details) {
+  /// stopped contacting the screen.
+  /// move finish
+  /// get current puzzle state
+  void onPanEnd(DragEndDetails details) {
     if (hitNode == null) {
       return;
     }

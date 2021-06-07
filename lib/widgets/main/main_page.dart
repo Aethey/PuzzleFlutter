@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photopuzzle/common/constants.dart';
-import 'package:photopuzzle/utils/camera/display_picture_page.dart';
+import 'package:photopuzzle/widgets/game/display_picture_page.dart';
 import 'package:photopuzzle/widgets/photo/photo_list_page.dart';
 import 'package:photopuzzle/widgets/puzzle/puzzle_list_page.dart';
 import 'package:photopuzzle/widgets/user/user_info_page.dart';
 
+/// main page
 class MainPage extends StatelessWidget {
   final int? heroTag;
   final User? user;
   final picker = ImagePicker();
+
+  /// use for switch FabCircularMenu open/close
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
 
   MainPage({Key? key, this.heroTag, this.user}) : super(key: key);
@@ -30,7 +33,7 @@ class MainPage extends StatelessWidget {
             children: [
               PuzzleListPage(),
               PhotoListPage(),
-              UserInfoPage(),
+              UserInfoPage(user: user),
             ],
           ),
           floatingActionButton: buildFloatingActionButton(context, size),
@@ -41,7 +44,7 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Container buildBottomNavigationBar() {
+  Widget buildBottomNavigationBar() {
     return Container(
       padding: EdgeInsets.only(bottom: mediumPadding, top: smallPadding),
       child: Container(
@@ -81,6 +84,7 @@ class MainPage extends StatelessWidget {
     );
   }
 
+  /// a button with a menu {take photo || use library}
   FabCircularMenu buildFloatingActionButton(BuildContext context, Size size) {
     return FabCircularMenu(
         key: fabKey,
@@ -118,6 +122,7 @@ class MainPage extends StatelessWidget {
         ]);
   }
 
+  /// go to camera,need permission
   Future<void> getCamera(BuildContext context) async {
     await picker.getImage(source: ImageSource.camera).then((value) {
       cropper(value!.path).then((value) {
@@ -134,6 +139,7 @@ class MainPage extends StatelessWidget {
     });
   }
 
+  /// go to library,need permission
   Future<void> getGallery(BuildContext context) async {
     await picker.getImage(source: ImageSource.gallery).then((value) {
       if (value != null) {
@@ -152,6 +158,7 @@ class MainPage extends StatelessWidget {
     });
   }
 
+  /// get image from camera or library,then crop it for use
   Future<File?> cropper(String path) async {
     return await ImageCropper.cropImage(
         sourcePath: path,

@@ -9,6 +9,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'puzzle_node.dart';
 
+/// use for manage puzzle image tool
 class PuzzleUtil {
   late ui.Image image;
   late double eachWidth;
@@ -38,15 +39,6 @@ class PuzzleUtil {
     return frameInfo.image;
   }
 
-  Future<Uint8List> compressFile(File file) async {
-    Uint8List? result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      quality: 50,
-    );
-
-    return result!;
-  }
-
   List<PuzzleNode> doTask() {
     List<PuzzleNode> list = <PuzzleNode>[];
     for (int j = 0; j < level; j++) {
@@ -69,6 +61,8 @@ class PuzzleUtil {
         baseX + eachWidth * i, baseY + eachWidth * j, eachWidth, eachWidth);
   }
 
+  ///Split picture then draw new canvas
+  ///set node image
   void makeBitmap(PuzzleNode node, int i, int j) {
     Rect rect = getShapeRect(eachBitmapWidth.toDouble() * i,
         eachBitmapWidth.toDouble() * j, eachBitmapWidth);

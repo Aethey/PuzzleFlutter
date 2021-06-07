@@ -14,18 +14,22 @@ import 'components/my_loading_route.dart';
 
 final loginModeProvider = StateProvider((ref) => false);
 
+/// login page
+/// use GoogleSign
+/// you can login without any auth by test
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
+
+  /// use for loading hero animation
   static int loginTag = 0001;
 
+  /// use for googleSign
   static final GoogleSignIn _googleSignIn = GoogleSignIn();
   static final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  static const opacityCurve = Interval(0.0, 0.75, curve: Curves.fastOutSlowIn);
-
   static final StreamController<User> _authStreamController =
       StreamController<User>.broadcast();
 
+  /// login action
   Future<void> _handleLogin(BuildContext context) async {
     await Firebase.initializeApp();
     if (!context.read(loginModeProvider).state) {
@@ -55,6 +59,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// main widget
   Widget _buildBody(Size size, BuildContext context) {
     return Container(
       width: size.width,
@@ -69,6 +74,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// login button
   Widget _buildButton(BuildContext context, Size size) {
     return Container(
       margin: EdgeInsets.only(top: mediumPadding),
@@ -106,6 +112,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// switch login mode  googleAuth || test
   Widget _buildSwitch(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -154,6 +161,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
+  /// this button has a hero animation
   Widget widgetLoginButton(BuildContext context) {
     return GestureDetector(
       onTap: () {

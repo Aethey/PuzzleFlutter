@@ -1,6 +1,8 @@
 import 'puzzle_node.dart';
 
+/// make a list can use for puzzle
 class PuzzleEngine {
+  //when Reverse pair count isEven, can use for puzzle
   static void makeRandom(List<PuzzleNode> list) {
     List<int> arr = [];
     do {
@@ -10,7 +12,7 @@ class PuzzleEngine {
         list[i].curIndex = i;
         arr.add(list[i].index);
       }
-    } while (readyReversePairs(arr) % 2 != 0);
+    } while (!readyReversePairs(arr).isEven);
   }
 
   ///

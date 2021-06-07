@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert' show utf8;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path_provider/path_provider.dart';
 
+/// manage FirebaseStorageAPi
 class FirebaseStorageManager {
   late firebase_storage.FirebaseStorage storage;
   static final FirebaseStorageManager _instance =
@@ -15,19 +15,7 @@ class FirebaseStorageManager {
     storage = firebase_storage.FirebaseStorage.instance;
   }
 
-  Future<void> downloadFileExample() async {
-    try {
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('puzzle')
-          .child('84136530_p0.jpg');
-      print(ref.name);
-      print(await ref.getDownloadURL());
-    } on firebase_storage.FirebaseException catch (e) {
-      // e.g, e.code == 'canceled'
-    }
-  }
-
+  /// upload image Uint8List data
   Future<String> uploadImageData(Uint8List data, String imageName) async {
     String text = 'Hello World!';
     List<int> encoded = utf8.encode(text);
@@ -62,6 +50,7 @@ class FirebaseStorageManager {
     }
   }
 
+  /// update image File
   Future<String> uploadImageFile(String filePath, String imageName) async {
     String text = 'Hello World!';
     List<int> encoded = utf8.encode(text);

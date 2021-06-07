@@ -1,25 +1,33 @@
-import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photopuzzle/common/constants.dart';
-import 'package:photopuzzle/utils/image_util.dart';
 import 'package:photopuzzle/widgets/login/components/my_loading_route.dart';
 
 import '../puzzle_detail_page.dart';
 
+/// puzzle image list item widget
 class ItemCard extends StatelessWidget {
   const ItemCard(
       {this.openContainer,
-      required this.subtitle,
+      this.subtitle,
       required this.id,
       required this.index,
       required this.imageUrl});
 
   final VoidCallback? openContainer;
-  final String subtitle;
+
+  /// image subtitle,disable now
+  final String? subtitle;
+
+  /// this is puzzleImage model ID,a documentID,get from firebase
+  /// use for hero animation
   final String id;
+
+  /// current item index
   final int index;
+
+  /// image url
   final String imageUrl;
 
   @override
@@ -28,6 +36,7 @@ class ItemCard extends StatelessWidget {
     return _buildBody(context, size);
   }
 
+  /// main widget
   Widget _buildBody(BuildContext context, Size size) {
     return GestureDetector(
       key: ValueKey(id),
@@ -54,29 +63,6 @@ class ItemCard extends StatelessWidget {
           ),
           // _buildInfo(context),
         ],
-      ),
-    );
-  }
-
-  Widget _buildInfo(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(smallPadding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Title',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.caption,
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -123,6 +109,7 @@ class ItemCard extends StatelessWidget {
     );
   }
 
+  /// image widget with a hero animation
   Widget _buildImage(BuildContext context, Size size) {
     return Hero(
       tag: '$id',
@@ -134,7 +121,8 @@ class ItemCard extends StatelessWidget {
           child: CachedNetworkImage(
             fit: BoxFit.cover,
             imageUrl: imageUrl,
-            placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
+            placeholder: (context, url) =>
+                Image.asset('assets/images/placeholder.png'),
             errorWidget: (context, url, dynamic e) => Icon(Icons.error),
           ),
 
@@ -146,4 +134,28 @@ class ItemCard extends StatelessWidget {
       ),
     );
   }
+
+// Widget _buildInfo(BuildContext context) {
+//   return Expanded(
+//     child: Padding(
+//       padding: const EdgeInsets.all(smallPadding),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: <Widget>[
+//           Text(
+//             'Title',
+//             style: Theme.of(context).textTheme.headline6,
+//           ),
+//           const SizedBox(height: 4),
+//           Text(
+//             subtitle,
+//             style: Theme.of(context).textTheme.caption,
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
+
 }

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+/// manage cloudFireStore APi
 class CloudManager {
   static final CloudManager _instance = CloudManager._internal();
 

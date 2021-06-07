@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/widgets/login/login_screen.dart';
 
+/// custom button
 class MyCommonButton extends StatelessWidget {
   const MyCommonButton({
     Key? key,

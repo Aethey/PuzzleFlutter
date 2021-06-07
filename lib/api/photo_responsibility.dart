@@ -3,6 +3,7 @@ import 'package:photopuzzle/model/photo_entity.dart';
 import 'package:photopuzzle/model/search_photo_entity.dart';
 import 'dio/dio_manager.dart';
 
+/// manage unsplash API
 class PhotoResponsibility {
   static final PhotoResponsibility _instance = PhotoResponsibility._internal();
 
@@ -10,6 +11,11 @@ class PhotoResponsibility {
 
   PhotoResponsibility._internal();
 
+  /// fetchPhotos  GET /photos
+  /// https://unsplash.com/documentation#search-photos
+  /// page: Page number to retrieve. (Optional; default: 1)
+  /// order_by: How to sort the photos. (Optional; default: relevant). Valid values are latest and relevant.
+  /// per_page: Number of items per page. (Optional; default: 10)
   Future<List<PhotoEntity>> fetchPhotos(
       {required int page, int? per_page, String? order_by}) async {
     Map<String, dynamic> params = <String, dynamic>{
@@ -23,6 +29,12 @@ class PhotoResponsibility {
     return list;
   }
 
+  ///searchPhotos  GET /search/photos
+  ///https://unsplash.com/documentation#search-photos
+  /// query: Search terms
+  /// page: Page number to retrieve. (Optional; default: 1)
+  /// order_by: How to sort the photos. (Optional; default: relevant). Valid values are latest and relevant.
+  /// per_page: Number of items per page. (Optional; default: 10)
   Future<List<PhotoEntity>> searchPhotos(
       {required int page,
       required String query,
@@ -47,7 +59,7 @@ class PhotoResponsibility {
       };
 
       var response = await DioManager().get('/search/photos', params: params);
-      SearchPhotoEntity  searchPhotoEntity = JsonConvert.fromJsonAsT(response);
+      SearchPhotoEntity searchPhotoEntity = JsonConvert.fromJsonAsT(response);
 
       return searchPhotoEntity.results;
     }

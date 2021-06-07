@@ -7,6 +7,7 @@ final photoProvider =
   return PhotoListNotifier();
 });
 
+/// manage image list state
 class PhotoListNotifier extends StateNotifier<PhotoListState> {
   PhotoListNotifier() : super(PhotoListState()) {
     _initList(query: '');
@@ -24,6 +25,7 @@ class PhotoListNotifier extends StateNotifier<PhotoListState> {
     state = state.copyWith(page: page, isLoading: false, photos: photos,query: query);
   }
 
+  /// load more data
   void loadMore() async {
     if (state.isLoading) {
       return;

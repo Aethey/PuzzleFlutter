@@ -8,6 +8,7 @@ final puzzleProvider =
   return PuzzleListNotifier();
 });
 
+/// manage puzzle list state
 class PuzzleListNotifier extends StateNotifier<PuzzleListState> {
   static String tempID = '';
 
@@ -15,7 +16,9 @@ class PuzzleListNotifier extends StateNotifier<PuzzleListState> {
     _initList();
   }
 
+  /// init puzzle list
   void _initList() async {
+    // use default user & default path now
     final response =
         await CloudManager().getPuzzleFromCloud('images', 'user001');
 
@@ -32,6 +35,8 @@ class PuzzleListNotifier extends StateNotifier<PuzzleListState> {
     state = state.copyWith(isLoading: false, puzzles: response.docs);
   }
 
+  /// load more data
+  /// paging cloudFireStore data
   void loadMore() async {
     if (state.isLoading) {
       return;

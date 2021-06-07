@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'dio_client.dart';
 
+/// http request manager
+/// It Was Me, Dio!
 class DioManager {
   final Dio _manager;
 
@@ -11,20 +13,23 @@ class DioManager {
 
   DioManager._internal(this._manager);
 
+  /// get request
   Future<dynamic> get<T>(String path, {Map<String, dynamic>? params}) {
     return _request(path, method: 'get', params: params);
   }
 
+  /// post request
   Future<dynamic> post<T>(String path, {Map<String, dynamic>? params, data}) {
     return _request(path, method: 'post', params: params, data: data);
   }
 
   Future<dynamic> _request(String path,
       {required String method, Map<String, dynamic>? params, data}) async {
-
     try {
-      Response response = await _manager.request(path,queryParameters: params,
-          data: data, options: Options(method: method));
+      Response response = await _manager.request(path,
+          queryParameters: params,
+          data: data,
+          options: Options(method: method));
       if (response.statusCode == 200 || response.statusCode == 201) {
         try {
           // custom by server json
@@ -34,7 +39,6 @@ class DioManager {
           //   return response.data;
           // }
           return response.data;
-
         } catch (e) {
           return Future.error('Json Error');
         }

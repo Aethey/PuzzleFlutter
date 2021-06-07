@@ -10,6 +10,9 @@ import 'components/photo_item.dart';
 final showAppBarProvider = StateProvider((ref) => true);
 final showCancelProvider = StateProvider((ref) => false);
 
+/// a photo image list page
+/// get from https://unsplash.com/
+
 class PhotoListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => PhotoListState();
@@ -19,12 +22,20 @@ class PhotoListState extends State<PhotoListPage>
     with AutomaticKeepAliveClientMixin {
   PhotoListState({Key? key});
 
+  /// photo list ScrollController
   static late ScrollController _scrollController;
+
+  /// scroll state
+  bool isScrollingDown = false;
+
+  /// control TextField focus
   static late FocusNode _focusNode;
 
+  /// last data list length
   int oldLength = 0;
+
+  /// the last item index in screen
   int curLastIndex = 0;
-  bool isScrollingDown = false;
 
   @override
   void initState() {
@@ -46,7 +57,8 @@ class PhotoListState extends State<PhotoListPage>
     );
   }
 
-  SafeArea _buildBody() {
+  /// main widget
+  Widget _buildBody() {
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -59,6 +71,7 @@ class PhotoListState extends State<PhotoListPage>
     );
   }
 
+  /// scroll auto hide appBar
   Widget _buildHideAbleAppBar() {
     return Consumer(
       builder: (context, watch, _) {
@@ -108,6 +121,7 @@ class PhotoListState extends State<PhotoListPage>
     );
   }
 
+  /// TextField focus dismiss
   Widget _buildCancelButton() {
     return GestureDetector(
       onTap: () {
@@ -129,6 +143,7 @@ class PhotoListState extends State<PhotoListPage>
   Widget _buildPhotoList() {
     return Consumer(
       builder: (context, watch, _) {
+        // photo listView state
         final isLoadMoreError = watch(photoProvider).isLoadMoreError;
         final isLoadMoreDone = watch(photoProvider).isLoadMoreDone;
         final isLoading = watch(photoProvider).isLoading;
@@ -177,12 +192,14 @@ class PhotoListState extends State<PhotoListPage>
     );
   }
 
+  /// if need loading then show
   Widget _buildLoadingWidget(BuildContext context) {
     return Container(
       child: Center(child: CircularProgressIndicator()),
     );
   }
 
+  /// if none then show
   Widget _buildNoneWidget(BuildContext context) {
     return Container(
       child: Center(
@@ -193,10 +210,13 @@ class PhotoListState extends State<PhotoListPage>
     );
   }
 
+  /// get current focus state
   void _focusListener() {
     context.read(showCancelProvider).state = _focusNode.hasFocus;
   }
 
+  /// listen scroll state
+  /// use for loadMore
   void _scrollListener() {
     _focusNode.unfocus();
     double maxScroll = _scrollController.position.maxScrollExtent;

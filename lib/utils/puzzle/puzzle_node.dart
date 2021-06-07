@@ -1,6 +1,7 @@
 import 'dart:ui' as ui show Image;
 import 'dart:ui';
 
+/// puzzle item
 class PuzzleNode {
   late int curIndex;
   late int index;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// custom Navigator animation
 class MyLoadingRoute<T> extends PageRoute<T> {
   MyLoadingRoute({this.builder, required this.duration, this.color});
 

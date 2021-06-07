@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+/// use for loading animation widget
 class LoadingWidget extends StatelessWidget {
   const LoadingWidget({Key? key, this.loginTag, this.color}) : super(key: key);
   final int? loginTag;

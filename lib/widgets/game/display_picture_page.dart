@@ -8,10 +8,10 @@ import 'package:photopuzzle/states/provider/puzzle/puzzle_list_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:photopuzzle/utils/image_util.dart';
 import 'package:photopuzzle/widgets/puzzle/puzzle_play_page.dart';
 
+/// display a cropped image
 class DisplayPicturePage extends StatelessWidget {
   final String imagePath;
 
@@ -57,29 +57,29 @@ class DisplayPicturePage extends StatelessWidget {
 
   Widget _buildButton(Size size, BuildContext context) {
     return Container(
-          margin: EdgeInsets.only(top: size.height / 8),
-          alignment: Alignment.center,
-          width: size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              MyCircleButton(
-                width: size.width / 6,
-                text: 'X',
-                press: () {
-                  Navigator.pop(context, true);
-                },
-              ),
-              MyCircleButton(
-                width: size.width / 6,
-                text: 'O',
-                press: () {
-                  uploadImage(context, imagePath);
-                },
-              ),
-            ],
+      margin: EdgeInsets.only(top: size.height / 8),
+      alignment: Alignment.center,
+      width: size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          MyCircleButton(
+            width: size.width / 6,
+            text: 'X',
+            press: () {
+              Navigator.pop(context, true);
+            },
           ),
-        );
+          MyCircleButton(
+            width: size.width / 6,
+            text: 'O',
+            press: () {
+              uploadImage(context, imagePath);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> uploadImage(BuildContext context, String imagePath) async {

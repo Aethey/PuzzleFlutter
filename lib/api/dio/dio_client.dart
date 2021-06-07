@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:photopuzzle/common/config.dart';
 
+/// get a dio instance
 class DioClient {
   Dio init() {
     var _dio = Dio();
