@@ -11,12 +11,10 @@ import '../login/components/my_loading_route.dart';
 class PuzzleDetailsPage extends StatelessWidget {
   PuzzleDetailsPage(
       {this.includeMarkAsDoneButton = true,
-      this.bytes,
       required this.id,
       required this.imageUrl});
 
   final bool includeMarkAsDoneButton;
-  final Uint8List? bytes;
   final String id;
   final String imageUrl;
 

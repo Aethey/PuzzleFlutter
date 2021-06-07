@@ -12,6 +12,7 @@ class PhotoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Hero(
       tag: photoEntity.id,
       child: GestureDetector(
@@ -26,6 +27,8 @@ class PhotoItem extends StatelessWidget {
                       )));
         },
         child: CachedNetworkImage(
+          width:size.width / 2 - 24 ,
+          height: (size.width / 2 - 24) * (photoEntity.height / photoEntity.width),
           fit: BoxFit.cover,
           imageUrl: photoEntity.urls.regular,
           placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),

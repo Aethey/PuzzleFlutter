@@ -67,14 +67,15 @@ class PhotoListState extends State<PhotoListPage>
           child: AnimatedContainer(
             width: MediaQuery.of(context).size.width -
                 (watch(showCancelProvider).state ? 50 : 0),
-            height: watch(showAppBarProvider).state ? bigSize : 0.0,
+            height: watch(showAppBarProvider).state ? bigSize : 10.0,
             duration: Duration(milliseconds: 200),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.only(right: smallPadding),
+                    margin:
+                        EdgeInsets.only(right: smallPadding, top: smallPadding),
                     child: TextField(
                       focusNode: _focusNode,
                       cursorColor: Colors.black,
@@ -89,13 +90,13 @@ class PhotoListState extends State<PhotoListPage>
                           color: Colors.black,
                         ),
                       ),
-                      onSubmitted: (value){
+                      onSubmitted: (value) {
                         context.read(photoProvider.notifier).refresh(value);
                       },
                     ),
                   ),
                 ),
-                Spacer(),
+                // Spacer(),
                 watch(showCancelProvider).state
                     ? _buildCancelButton()
                     : Container()
@@ -139,16 +140,16 @@ class PhotoListState extends State<PhotoListPage>
             return _buildNoneWidget(context);
           }
           // Loading Large
-          return _buildNoneWidget(context);
+          return _buildLoadingWidget(context);
         }
         return WaterfallFlow.builder(
-            //cacheExtent: 0.0,
             itemCount: photos.length + 1,
             controller: _scrollController,
+            cacheExtent: MediaQuery.of(context).size.height * 2,
             gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 4.0,
-              mainAxisSpacing: 4.0,
+              crossAxisSpacing: 1.0,
+              mainAxisSpacing: 1.0,
               viewportBuilder: (int firstIndex, int lastIndex) {
                 curLastIndex = lastIndex;
               },
@@ -173,6 +174,12 @@ class PhotoListState extends State<PhotoListPage>
               return PhotoItem(i, photos[i]);
             });
       },
+    );
+  }
+
+  Widget _buildLoadingWidget(BuildContext context) {
+    return Container(
+      child: Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -209,7 +216,7 @@ class PhotoListState extends State<PhotoListPage>
             if (oldLength == context.read(photoProvider).photos!.length) {
               // judge by current show Last item，
               if (curLastIndex >=
-                  context.read(photoProvider).photos!.length - 4) {
+                  context.read(photoProvider).photos!.length - 2) {
                 context.read(photoProvider.notifier).loadMore();
               }
             }

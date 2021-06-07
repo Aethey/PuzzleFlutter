@@ -36,6 +36,7 @@ dependencies:
   firebase_core: ^1.2.1
 # Add the dependency for the FlutterFire plugin for Google Analytics
   firebase_analytics: ^8.1.1
+  firebase_storage: "^8.1.1"
 
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore

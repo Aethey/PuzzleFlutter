@@ -40,8 +40,8 @@ class PuzzleListNotifier extends StateNotifier<PuzzleListState> {
     final len = state.puzzles?.length;
     DocumentSnapshot last = state.copyWith().puzzles![len! - 1];
 
-    if (tempID != last['id'].toString()) {
-      tempID = last['id'].toString();
+    if (tempID != last['upLoadTime'].toString()) {
+      tempID = last['upLoadTime'].toString();
     } else {
       // state = state.copyWith(isLoading: false, isLoadMoreDone: true);
       // return;

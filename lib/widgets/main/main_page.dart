@@ -10,11 +10,11 @@ import 'package:photopuzzle/widgets/photo/photo_list_page.dart';
 import 'package:photopuzzle/widgets/puzzle/puzzle_list_page.dart';
 import 'package:photopuzzle/widgets/user/user_info_page.dart';
 
-
 class MainPage extends StatelessWidget {
   final int? heroTag;
   final User? user;
   final picker = ImagePicker();
+  final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
 
   MainPage({Key? key, this.heroTag, this.user}) : super(key: key);
 
@@ -83,6 +83,7 @@ class MainPage extends StatelessWidget {
 
   FabCircularMenu buildFloatingActionButton(BuildContext context, Size size) {
     return FabCircularMenu(
+        key: fabKey,
         ringDiameter: size.width * 2 / 3,
         ringColor: Colors.transparent,
         fabOpenColor: Colors.grey,
@@ -98,6 +99,9 @@ class MainPage extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
+                if (fabKey.currentState!.isOpen) {
+                  fabKey.currentState!.close();
+                }
                 getCamera(context);
               }),
           IconButton(
@@ -106,6 +110,9 @@ class MainPage extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
+                if (fabKey.currentState!.isOpen) {
+                  fabKey.currentState!.close();
+                }
                 getGallery(context);
               }),
         ]);
@@ -130,14 +137,18 @@ class MainPage extends StatelessWidget {
   Future<void> getGallery(BuildContext context) async {
     await picker.getImage(source: ImageSource.gallery).then((value) {
       if (value != null) {
-        Navigator.push<void>(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DisplayPicturePage(imagePath: value.path),
-          ),
-        );
+        cropper(value.path).then((value) {
+          if (value != null) {
+            Navigator.push<void>(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    DisplayPicturePage(imagePath: value.path.toString()),
+              ),
+            );
+          }
+        });
       }
-      ;
     });
   }
 

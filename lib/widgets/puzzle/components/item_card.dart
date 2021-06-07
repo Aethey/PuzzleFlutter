@@ -12,14 +12,12 @@ class ItemCard extends StatelessWidget {
   const ItemCard(
       {this.openContainer,
       required this.subtitle,
-      required this.bytes,
       required this.id,
       required this.index,
       required this.imageUrl});
 
   final VoidCallback? openContainer;
   final String subtitle;
-  final Uint8List bytes;
   final String id;
   final int index;
   final String imageUrl;
@@ -40,7 +38,6 @@ class ItemCard extends StatelessWidget {
                 duration: Duration(milliseconds: 500),
                 builder: (context) => PuzzleDetailsPage(
                       imageUrl: imageUrl,
-                      bytes: bytes,
                       id: id,
                     )));
       },

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:photopuzzle/api/firebase/firebase_storage_manager.dart';
 
 class UserInfoPage extends StatelessWidget {
   List<String> mockSetTextList = [
@@ -22,7 +24,15 @@ class UserInfoPage extends StatelessWidget {
         title: Text('USERINFO'),
       ),
       body: Column(
-        children: [_buildInfoWidget(context), _buildGridWidget(context)],
+        children: [
+          _buildInfoWidget(context),
+          _buildGridWidget(context),
+          ElevatedButton(
+              onPressed: () async {
+                    await FirebaseStorageManager().downloadFileExample();
+              },
+              child: SvgPicture.asset('assets/icons/point.svg'))
+        ],
       ),
     );
   }

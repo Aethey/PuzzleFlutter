@@ -96,6 +96,10 @@ class PuzzleListState extends State<PuzzleListPage>
                         child: Text(''),
                       );
                     }
+
+                    if(docs.length < 4){
+                      return Container();
+                    }
                     return Center(
                       // width: MediaQuery.of(context).size.width,
                       // padding: EdgeInsets.symmetric(horizontal: mediumPadding),
@@ -105,12 +109,9 @@ class PuzzleListState extends State<PuzzleListPage>
                       ),
                     );
                   }
-
-                  Uint8List bytes =
-                      Base64Decoder().convert(docs[i]['b64'].toString());
                   String id = docs[i].id;
                   return animContainer(
-                      docs[i]['imageUrl'].toString(), bytes, id, i);
+                      docs[i]['imageUrl'].toString(), id, i);
                 }),
           );
         },
@@ -134,14 +135,13 @@ class PuzzleListState extends State<PuzzleListPage>
     );
   }
 
-  Widget animContainer(String imageUrl, Uint8List bytes, String id, int index) {
+  Widget animContainer(String imageUrl, String id, int index) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(smallPadding),
         child: ItemCard(
           subtitle: 'Secondary text',
           id: id,
-          bytes: bytes,
           index: index,
           imageUrl: imageUrl,
         ),

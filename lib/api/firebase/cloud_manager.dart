@@ -15,9 +15,9 @@ class CloudManager {
     if (last == null) {
       dc = await FirebaseFirestore.instance
           .collection(collectionID)
-          .doc(documentID)
+          .doc('user001')
           .collection('puzzles')
-          .orderBy('id')
+          .orderBy('upLoadTime',descending: true)
           .limit(3)
           .get();
     } else {
@@ -25,7 +25,7 @@ class CloudManager {
           .collection(collectionID)
           .doc(documentID)
           .collection('puzzles')
-          .orderBy('id')
+          .orderBy('upLoadTime',descending: true)
           .startAfterDocument(last)
           .limit(2)
           .get();
