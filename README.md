@@ -8,6 +8,7 @@ Architectural: [MVU](https://buildflutter.com/functional-model-view-update-archi
 <br>Http: [dio](https://pub.dev/packages?q=dio)
 <br>State: [flutter_riverpod](https://pub.dev/packages/flutter_riverpod),[freezed](https://pub.dev/packages/freezed)
 <br>test: [mockito](https://pub.dev/packages/mockito/install)
+<br>localization: [intl](https://pub.dev/packages/intl)
 
 
 
