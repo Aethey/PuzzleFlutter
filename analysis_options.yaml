@@ -1,10 +1,20 @@
 include: package:pedantic/analysis_options.yaml
 
 analyzer:
-  exclude: [build/**]
+  exclude:
+    - build/**
+#    - test/**
+    - "lib/states/freezed/*.freezed.dart"
+    - "lib/states/freezed/*.g.dart"
+
+
   strong-mode:
     implicit-casts: false
-    implicit-dynamic: false
+#    implicit-dynamic: false
+  errors:
+    omit_local_variable_types: ignore
+
+
 
 linter:
   rules:
