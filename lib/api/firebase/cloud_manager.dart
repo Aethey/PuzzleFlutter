@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 /// manage cloudFireStore APi
 class CloudManager {
+  late FirebaseFirestore firestore;
+
   static final CloudManager _instance = CloudManager._internal();
 
-  factory CloudManager() => _instance;
-
   CloudManager._internal();
+
+  factory CloudManager({FirebaseFirestore? firestore}) {
+    firestore ??= FirebaseFirestore.instance;
+    return _instance;
+  }
 
   Future<QuerySnapshot> getPuzzleFromCloud(
       String collectionID, String documentID,
@@ -17,9 +21,9 @@ class CloudManager {
     if (last == null) {
       dc = await FirebaseFirestore.instance
           .collection(collectionID)
-          .doc('user001')
+          .doc(documentID)
           .collection('puzzles')
-          .orderBy('upLoadTime',descending: true)
+          .orderBy('upLoadTime', descending: true)
           .limit(3)
           .get();
     } else {
@@ -27,7 +31,7 @@ class CloudManager {
           .collection(collectionID)
           .doc(documentID)
           .collection('puzzles')
-          .orderBy('upLoadTime',descending: true)
+          .orderBy('upLoadTime', descending: true)
           .startAfterDocument(last)
           .limit(2)
           .get();
