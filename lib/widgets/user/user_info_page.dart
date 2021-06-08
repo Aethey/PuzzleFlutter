@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photopuzzle/common/constants.dart';
+import 'package:photopuzzle/l10n/test_res.dart';
 
 import '../../my_app.dart';
 
@@ -41,7 +42,8 @@ class UserInfoState extends State<UserInfoPage>
   Column _buildBody(BuildContext context, Size size) {
     return Column(
       children: [
-        _buildTitle(context, '${user == null ? 'Test' : user!.displayName}'),
+        _buildTitle(context,
+            '${user == null ? '${TextResource.mockUserName(context)}' : user!.displayName}'),
         Expanded(
             child: SingleChildScrollView(
           child: Column(
@@ -59,9 +61,12 @@ class UserInfoState extends State<UserInfoPage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildText('0', 'Puzzle'),
-                          _buildText('0', 'Friend'),
-                          _buildText('o', 'Like'),
+                          _buildText(
+                              '0', '${TextResource.userInfoPuzzle(context)}'),
+                          _buildText(
+                              '0', '${TextResource.userInfoFriend(context)}'),
+                          _buildText('0',
+                              '${TextResource.userInfoPuzzleLike(context)}'),
                         ],
                       ),
                     )
@@ -78,7 +83,7 @@ class UserInfoState extends State<UserInfoPage>
                 ),
               ),
               Center(
-                child: Text('there is nothing...'),
+                child: Text('${TextResource.userInfoNoneText(context)}'),
               )
             ],
           ),

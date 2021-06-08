@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photopuzzle/common/constants.dart';
+import 'package:photopuzzle/l10n/test_res.dart';
 import 'package:photopuzzle/states/provider/puzzle/puzzle_list_provider.dart';
 
 import 'components/item_card.dart';
@@ -131,7 +132,7 @@ class PuzzleListState extends State<PuzzleListPage>
     return Container(
       child: Center(
           child: Text(
-        'NONE',
+        '${TextResource.listNone(context)}',
         style: Theme.of(context).textTheme.headline2,
       )),
     );

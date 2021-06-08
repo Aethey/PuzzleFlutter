@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photopuzzle/common/constants.dart';
+import 'package:photopuzzle/l10n/test_res.dart';
 import 'package:photopuzzle/states/provider/photo/photo_list_provider.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
 
@@ -204,7 +205,7 @@ class PhotoListState extends State<PhotoListPage>
     return Container(
       child: Center(
           child: Text(
-        'NONE',
+        '${TextResource.listNone(context)}',
         style: Theme.of(context).textTheme.headline2,
       )),
     );

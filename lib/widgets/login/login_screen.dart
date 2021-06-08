@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/components/my_common_button.dart';
+import 'package:photopuzzle/l10n/test_res.dart';
 import '../main/main_page.dart';
 import 'components/my_loading_route.dart';
 
@@ -66,7 +67,7 @@ class LoginScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildIcon(context,size),
+          _buildIcon(context, size),
           _buildSwitch(context),
           _buildButton(context, size)
         ],
@@ -79,7 +80,7 @@ class LoginScreen extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: mediumPadding),
       child: MyCommonButton(
-        text: 'LOGIN',
+        text: '${TextResource.loginText(context)}',
         press: () {
           Navigator.push(
               context,
@@ -118,7 +119,7 @@ class LoginScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Auth',
+          '${TextResource.authModeText(context)}',
           style: Theme.of(context).textTheme.headline5,
         ),
         Container(
@@ -138,14 +139,14 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
         Text(
-          'Test',
+          '${TextResource.testModeText(context)}',
           style: Theme.of(context).textTheme.headline5,
         ),
       ],
     );
   }
 
-  Widget _buildIcon(BuildContext context,Size size) {
+  Widget _buildIcon(BuildContext context, Size size) {
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
@@ -188,7 +189,7 @@ class LoginScreen extends StatelessWidget {
                               )));
                 });
                 // custom loading text view
-                return widgetLoginSuccess();
+                return widgetLoginSuccess(context);
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -208,7 +209,7 @@ class LoginScreen extends StatelessWidget {
                               )));
                 });
                 // custom loading text view
-                return widgetLoginSuccess();
+                return widgetLoginSuccess(context);
               } else {
                 SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
                   Navigator.of(context).pop();
@@ -220,12 +221,12 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  AnimatedDefaultTextStyle widgetLoginSuccess() {
+  AnimatedDefaultTextStyle widgetLoginSuccess(BuildContext context) {
     return AnimatedDefaultTextStyle(
         duration: Duration(milliseconds: 300),
         style: TextStyle(fontSize: mediumText),
         child: Text(
-          'Welcome Back...',
+          '${TextResource.loginSuccessText(context)}',
         ));
   }
 

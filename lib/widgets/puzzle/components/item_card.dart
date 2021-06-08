@@ -100,7 +100,7 @@ class ItemCard extends StatelessWidget {
                   ),
                 ),
                 Text('Made By'),
-                Text('UserName'),
+                Text('User'),
               ],
             ),
           ),
