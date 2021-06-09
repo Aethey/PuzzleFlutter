@@ -46,7 +46,7 @@ class PuzzlePlayPage extends StatelessWidget {
             width: smallSize,
           ),
           FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).accentColor,
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -54,6 +54,7 @@ class PuzzlePlayPage extends StatelessWidget {
               'assets/icons/back.svg',
               width: smallSize,
               height: smallSize,
+              color: Theme.of(context).primaryColor,
             ),
           )
         ],
