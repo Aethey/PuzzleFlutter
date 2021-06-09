@@ -15,8 +15,7 @@ import 'package:photopuzzle/widgets/puzzle/puzzle_play_page.dart';
 class DisplayPicturePage extends StatelessWidget {
   final String imagePath;
 
-  const DisplayPicturePage({Key? key, required this.imagePath})
-      : super(key: key);
+  DisplayPicturePage({Key? key, required this.imagePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class DisplayPicturePage extends StatelessWidget {
               width: size.width,
               height: size.height,
               child: Image.file(File(imagePath), fit: BoxFit.cover)),
-          _buildBody(size, context)
+          _buildBody(size, context),
         ],
       ),
     );
@@ -74,6 +73,13 @@ class DisplayPicturePage extends StatelessWidget {
             width: size.width / 6,
             text: 'O',
             press: () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Theme.of(context).shadowColor.withOpacity(0.5),
+                content: LinearProgressIndicator(
+                  color: Theme.of(context).accentColor,
+                ),
+                // duration: const Duration(seconds: 1),
+              ));
               uploadImage(context, imagePath);
             },
           ),
@@ -101,6 +107,7 @@ class DisplayPicturePage extends StatelessWidget {
 
   void startGame(BuildContext context, Uint8List bytes) {
     context.read(puzzleProvider.notifier).refresh();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
