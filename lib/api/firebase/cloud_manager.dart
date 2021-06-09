@@ -2,15 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// manage cloudFireStore APi
 class CloudManager {
-  late FirebaseFirestore firestore;
+  final FirebaseFirestore firestore;
 
-  static final CloudManager _instance = CloudManager._internal();
-
-  CloudManager._internal();
+  CloudManager._internal(this.firestore);
 
   factory CloudManager({FirebaseFirestore? firestore}) {
     firestore ??= FirebaseFirestore.instance;
-    return _instance;
+    return CloudManager._internal(firestore);
   }
 
   Future<QuerySnapshot> getPuzzleFromCloud(
@@ -19,7 +17,7 @@ class CloudManager {
     print('getPuzzleFromCloud');
     QuerySnapshot dc;
     if (last == null) {
-      dc = await FirebaseFirestore.instance
+      dc = await firestore
           .collection(collectionID)
           .doc(documentID)
           .collection('puzzles')
@@ -27,7 +25,7 @@ class CloudManager {
           .limit(3)
           .get();
     } else {
-      dc = await FirebaseFirestore.instance
+      dc = await firestore
           .collection(collectionID)
           .doc(documentID)
           .collection('puzzles')
@@ -42,7 +40,7 @@ class CloudManager {
   // realtime
   Stream<QuerySnapshot> getPuzzleFromCloudRealTime(
       String collectionID, String documentID) {
-    return FirebaseFirestore.instance
+    return firestore
         .collection(collectionID)
         .doc(documentID)
         .collection('puzzles')
@@ -52,14 +50,11 @@ class CloudManager {
 
   void setDataToFirebase(
       String userName, String imageName, Map<String, dynamic> map) {
-    final doc = FirebaseFirestore.instance.collection('images');
+    final doc = firestore.collection('images');
     doc.doc(userName).collection('puzzles').doc(imageName).set(map);
   }
 
   Future<void> deleteData(String collectionID, String documentID) async {
-    return await FirebaseFirestore.instance
-        .collection(collectionID)
-        .doc(documentID)
-        .delete();
+    return await firestore.collection(collectionID).doc(documentID).delete();
   }
 }
