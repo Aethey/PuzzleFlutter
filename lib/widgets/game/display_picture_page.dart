@@ -76,7 +76,7 @@ class DisplayPicturePage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: Theme.of(context).shadowColor.withOpacity(0.5),
                 content: LinearProgressIndicator(
-                  color: Theme.of(context).accentColor,
+                  // color: Theme.of(context).accentColor,
                 ),
                 // duration: const Duration(seconds: 1),
               ));

@@ -12,7 +12,7 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   final mockObserver = MockNavigatorObserver();
-  String widgetTag = 'home';
+  String widgetTag = 'PuzzleListPage';
   // String widgetTag = "login";
 
   Widget? getTestWidget(String name) {
@@ -31,9 +31,4 @@ void main() {
 
     return Container();
   }
-
-  MaterialApp testApp = MaterialApp(
-    home: getTestWidget(widgetTag),
-    navigatorObservers: [mockObserver],
-  );
 }
