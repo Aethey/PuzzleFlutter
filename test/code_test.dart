@@ -1,4 +1,3 @@
-// Import the test package and Counter class
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -69,26 +68,25 @@ void main() {
       expect(result.isEven, true);
     });
   });
-
-  group('', () {
-    setupFirebaseAuthMocks();
-    final firestore = MockFirestoreInstance();
-
-    setUp(() async {
-      await Firebase.initializeApp();
-      for (int i = 0; i < 5; i++) {
-        await firestore
-            .doc('images/user001/puzzles/123$i')
-            .set({'imageUrl': '$i'});
-      }
-    });
-
-    test('puzzleList', () async {
-      // var data = await CloudManager().getPuzzleFromCloud('images', 'user001');
-      // String ans = data.docs[0].reference.path;
-
-      final querySnapshot = await firestore.collectionGroup('puzzles').get();
-      int len = querySnapshot.size;
-    });
-  });
+  //
+  // group('', () {
+  //   setupFirebaseAuthMocks();
+  //   final firestore = MockFirestoreInstance();
+  //
+  //   setUp(() async {
+  //     await Firebase.initializeApp();
+  //     for (int i = 0; i < 5; i++) {
+  //       await firestore
+  //           .doc('images/user001/puzzles/123$i')
+  //           .set({'imageUrl': '$i'});
+  //     }
+  //   });
+  //
+  //   test('puzzleList', () async {
+  //     // var data = await CloudManager().getPuzzleFromCloud('images', 'user001');
+  //     // String ans = data.docs[0].reference.path;
+  //
+  //     final querySnapshot = await firestore.collectionGroup('puzzles').get();
+  //   });
+  // });
 }
