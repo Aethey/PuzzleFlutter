@@ -10,6 +10,7 @@ import 'package:test/test.dart';
 import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 import 'photo/fake_photo_responsibility.dart';
 import 'package:photopuzzle/api/firebase/cloud_manager.dart';
+
 // import 'package:flutter_test/flutter_test.dart';
 class MockBuildContext extends Mock implements BuildContext {}
 
@@ -19,19 +20,18 @@ void main() {
     _mockContext = MockBuildContext();
   });
 
-  group('photoList',(){
+  group('photoList', () {
     test('photoList.len', () async {
       FakePhotoRepository fakePhotoRepository = FakePhotoRepository();
       List<PhotoEntity> photoMockList =
-      await fakePhotoRepository.fetchPhotos(page: 1);
+          await fakePhotoRepository.fetchPhotos(page: 1);
       List<PhotoEntity> photoList =
-      await PhotoResponsibility().fetchPhotos(page: 1);
+          await PhotoResponsibility().fetchPhotos(page: 1);
       expect(photoMockList.length, photoList.length);
     });
   });
 
-
-  group('puzzle create',(){
+  group('puzzle create', () {
     test('test for create puzzle1 ', () {
       var result = PuzzleEngine.readyReversePairs([6, 4, 8, 5, 3, 7, 1, 2, 9]);
       print('result$result');
@@ -61,14 +61,5 @@ void main() {
       print('result$result');
       expect(result.isEven, true);
     });
-
-    test('test for create puzzle6 ', () {
-      var result = PuzzleEngine.readyReversePairs([4, 7, 5, 6, 3, 2, 8, 1, 9]);
-      print('result$result');
-      expect(result.isEven, true);
-    });
   });
-
 }
-
-
