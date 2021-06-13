@@ -7,8 +7,8 @@ import 'package:photopuzzle/model/photo_entity.dart';
 import 'package:photopuzzle/utils/puzzle/puzzle_engine.dart';
 import 'package:test/test.dart';
 import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
-import 'mock_firebase_app.dart';
-import 'photo/fake_photo_responsibility.dart';
+import '../util/mock_firebase_app.dart';
+import '../photo/fake_photo_responsibility.dart';
 import 'package:photopuzzle/api/firebase/cloud_manager.dart';
 
 // import 'package:flutter_test/flutter_test.dart';

@@ -12,6 +12,7 @@ import 'package:photopuzzle/components/my_common_button.dart';
 import 'package:photopuzzle/l10n/test_res.dart';
 import '../main/main_page.dart';
 import 'components/my_loading_route.dart';
+import 'components/my_login_button.dart';
 
 final loginModeProvider = StateProvider((ref) => false);
 
@@ -63,6 +64,7 @@ class LoginScreen extends StatelessWidget {
   /// main widget
   Widget _buildBody(Size size, BuildContext context) {
     return Container(
+      key: Key('body'),
       width: size.width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -78,6 +80,7 @@ class LoginScreen extends StatelessWidget {
   /// login button
   Widget _buildButton(BuildContext context, Size size) {
     return Container(
+      key: Key('loginButton'),
       margin: EdgeInsets.only(top: mediumPadding),
       child: MyCommonButton(
         text: '${TextResource.loginText(context)}',
@@ -102,7 +105,10 @@ class LoginScreen extends StatelessWidget {
                                   child: SvgPicture.asset(
                                       'assets/icons/profile_user.svg')),
                             ),
-                            widgetLoginButton(context)
+                            MyLoginButton(
+                              loginTag: loginTag,
+                              stream: _authStreamController.stream,
+                            )
                           ],
                         ),
                       ),
@@ -160,82 +166,5 @@ class LoginScreen extends StatelessWidget {
           tag: '$loginTag',
           child: SvgPicture.asset('assets/icons/profile_user.svg')),
     );
-  }
-
-  /// this button has a hero animation
-  Widget widgetLoginButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop();
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(smallPadding),
-        child: StreamBuilder<User>(
-            stream: _authStreamController.stream,
-            builder: (context, snapshot) {
-              /// this is test mode without firebase auth
-              if (context.read(loginModeProvider).state) {
-                SchedulerBinding.instance!
-                    .addPostFrameCallback((timeStamp) async {
-                  /// mock loading
-                  await Future<void>.delayed(const Duration(seconds: 1));
-                  await Navigator.pushReplacement(
-                      context,
-                      MyLoadingRoute<void>(
-                          duration: Duration(milliseconds: 500),
-                          builder: (context) => MainPage(
-                                heroTag: loginTag,
-                                user: null,
-                              )));
-                });
-                // custom loading text view
-                return widgetLoginSuccess(context);
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // change loading text view
-                return widgetLoading();
-              } else if (snapshot.connectionState == ConnectionState.active &&
-                      snapshot.data != null ||
-                  snapshot.data == null) {
-                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                  Navigator.pushReplacement(
-                      context,
-                      MyLoadingRoute<void>(
-                          duration: Duration(milliseconds: 500),
-                          builder: (context) => MainPage(
-                                heroTag: loginTag,
-                                user: snapshot.data,
-                              )));
-                });
-                // custom loading text view
-                return widgetLoginSuccess(context);
-              } else {
-                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                  Navigator.of(context).pop();
-                });
-              }
-              return Container();
-            }),
-      ),
-    );
-  }
-
-  AnimatedDefaultTextStyle widgetLoginSuccess(BuildContext context) {
-    return AnimatedDefaultTextStyle(
-        duration: Duration(milliseconds: 300),
-        style: TextStyle(fontSize: mediumText),
-        child: Text(
-          '${TextResource.loginSuccessText(context)}',
-        ));
-  }
-
-  AnimatedDefaultTextStyle widgetLoading() {
-    return AnimatedDefaultTextStyle(
-        duration: Duration(milliseconds: 300),
-        style: TextStyle(fontSize: mediumText - 5.0),
-        child: Text(
-          'Loading...',
-        ));
   }
 }
