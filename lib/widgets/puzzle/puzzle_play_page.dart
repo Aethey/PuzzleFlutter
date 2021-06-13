@@ -8,20 +8,30 @@ import 'package:photopuzzle/common/constants.dart';
 import 'package:photopuzzle/utils/puzzle/puzzle_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
-class PuzzlePlayPage extends StatelessWidget {
+class PuzzlePlayPage extends StatefulWidget {
   final Size size;
   final Uint8List bytes;
   final int level;
 
   PuzzlePlayPage(this.size, this.bytes, this.level);
 
+  @override
+  State<StatefulWidget> createState() => PuzzlePlayState();
+}
+
+class PuzzlePlayState extends State<PuzzlePlayPage> {
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
+
+  @override
+  void initState() {
+    Future<dynamic>.delayed(Duration(seconds: 1)).then((dynamic value) =>
+        _stopWatchTimer.onExecute.add(StopWatchExecute.start));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    Future<dynamic>.delayed(Duration(seconds: 1)).then((dynamic value) =>
-        _stopWatchTimer.onExecute.add(StopWatchExecute.start));
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: _buildBody(size),
@@ -82,9 +92,14 @@ class PuzzlePlayPage extends StatelessWidget {
   Widget _buildGameBoard(Size size) {
     return Container(
       height: size.width,
-      child: PuzzleWidget(size:size, bytes:bytes, level:level,stopTimer: (){
-        _stopWatchTimer.dispose();
-      },),
+      child: PuzzleWidget(
+        size: size,
+        bytes: widget.bytes,
+        level: widget.level,
+        stopTimer: () {
+          _stopWatchTimer.dispose();
+        },
+      ),
     );
   }
 
@@ -116,5 +131,11 @@ class PuzzlePlayPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _stopWatchTimer.execute;
+    super.dispose();
   }
 }
