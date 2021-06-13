@@ -80,6 +80,9 @@ dependencies:
   #  https://pub.dev/packages/mockito/install
   mockito: ^5.0.9
   cloud_firestore_mocks: ^0.9.0+1
+  firebase_auth_mocks: ^0.7.0
+  google_sign_in_mocks: ^0.2.1
+
 #  https://flutter.cn/docs/cookbook/testing/unit/introduction
   test:
 

@@ -18,6 +18,11 @@ class PuzzleDetailsPage extends StatelessWidget {
   final String id;
   final String imageUrl;
 
+  static int count = 0;
+
+  final Stream newsStream =
+      Stream.periodic(Duration(seconds: 2), (_) => count++);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -30,7 +35,8 @@ class PuzzleDetailsPage extends StatelessWidget {
               child: CachedNetworkImage(
                 fit: BoxFit.cover,
                 imageUrl: imageUrl,
-                placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
+                placeholder: (context, url) =>
+                    Image.asset('assets/images/placeholder.png'),
                 errorWidget: (context, url, dynamic e) => Icon(Icons.error),
               )),
           _buildBody(context, size)
@@ -39,13 +45,40 @@ class PuzzleDetailsPage extends StatelessWidget {
     );
   }
 
+  List<Widget> _tips() {
+    List<Widget> _tips = <Widget>[];
+
+    return _tips;
+  }
+
   Widget _buildBody(BuildContext context, Size size) {
+    newsStream
+        .map((e) {
+          count = e as int;
+          print(count);
+          return 'stuff $e';
+        })
+        .take(5)
+        .forEach((e) {
+          print(e);
+        });
     return Container(
       color: Theme.of(context).primaryColor.withOpacity(0.6),
       width: size.width,
       child: Column(
         children: <Widget>[
-          _buildImage(context,size),
+          Stack(
+            children: [
+              _buildImage(context, size),
+              Positioned(
+                  top: 100,
+                  left: 100,
+                  child: Text(
+                    'tips',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ))
+            ],
+          ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: smallPadding),
             child: Row(
@@ -82,9 +115,9 @@ class PuzzleDetailsPage extends StatelessWidget {
             padding:
                 EdgeInsets.only(top: 0.0, left: verySmallPadding, bottom: 0.0),
             children: [
-              _buildRankItem(context,size),
-              _buildRankItem(context,size),
-              _buildRankItem(context,size),
+              _buildRankItem(context, size),
+              _buildRankItem(context, size),
+              _buildRankItem(context, size),
             ],
           ),
         ),
@@ -101,7 +134,7 @@ class PuzzleDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRankItem(BuildContext context,Size size) {
+  Widget _buildRankItem(BuildContext context, Size size) {
     return Container(
       margin: EdgeInsets.only(top: mediumPadding),
       child: Row(
@@ -170,7 +203,7 @@ class PuzzleDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(BuildContext context,Size size) {
+  Widget _buildImage(BuildContext context, Size size) {
     return Hero(
       tag: '$id',
       child: Transform(
@@ -195,7 +228,8 @@ class PuzzleDetailsPage extends StatelessWidget {
             child: CachedNetworkImage(
               fit: BoxFit.cover,
               imageUrl: imageUrl,
-              placeholder: (context, url) => Image.asset('assets/images/placeholder.png'),
+              placeholder: (context, url) =>
+                  Image.asset('assets/images/placeholder.png'),
               errorWidget: (context, url, dynamic e) => Icon(Icons.error),
             ),
 
