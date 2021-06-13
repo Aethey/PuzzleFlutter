@@ -118,6 +118,7 @@ flutter:
     - assets/bg/
     - assets/images/
     - assets/icons/
+    - assets/fonts/
     - resources/test/get_success_response.json
 
   generate: true

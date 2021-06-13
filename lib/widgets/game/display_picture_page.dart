@@ -36,6 +36,7 @@ class DisplayPicturePage extends StatelessWidget {
 
   Widget _buildBody(Size size, BuildContext context) {
     return Container(
+      key: Key('body'),
       color: Theme.of(context).accentColor.withOpacity(0.8),
       child: Column(
         children: <Widget>[
@@ -63,6 +64,7 @@ class DisplayPicturePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           MyCircleButton(
+            key: Key('X'),
             width: size.width / 6,
             text: 'X',
             press: () {
@@ -70,6 +72,7 @@ class DisplayPicturePage extends StatelessWidget {
             },
           ),
           MyCircleButton(
+            key: Key('O'),
             width: size.width / 6,
             text: 'O',
             press: () {
