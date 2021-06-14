@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photopuzzle/common/constants.dart';
@@ -50,33 +49,39 @@ class ItemCard extends StatelessWidget {
                       id: id,
                     )));
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [_buildIcon(context), _buildInfo(context)],
+              ),
             ),
-            child: Stack(
-              children: [_buildImage(context, size), _buildIcon(context)],
-            ),
-          ),
-          // _buildInfo(context),
-        ],
+            _buildImage(context, size)
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildIcon(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(smallPadding),
       child: Column(
         children: [
           Container(
             decoration: BoxDecoration(
-                color: Colors.teal,
+                color: Theme.of(context).accentColor.withOpacity(0.8),
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(40.0),
-                  topRight: const Radius.circular(40.0),
+                  topLeft: const Radius.circular(10.0),
+                  topRight: const Radius.circular(10.0),
                   bottomLeft: const Radius.circular(10.0),
                   bottomRight: const Radius.circular(10.0),
                 ),
@@ -86,9 +91,9 @@ class ItemCard extends StatelessWidget {
                     blurRadius: 15.0,
                   ),
                 ]),
-            margin:
-                EdgeInsets.only(left: verySmallPadding, top: verySmallPadding),
-            child: Column(
+            // margin:
+            //     EdgeInsets.only(left: verySmallPadding, top: verySmallPadding),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
@@ -99,8 +104,13 @@ class ItemCard extends StatelessWidget {
                     backgroundImage: AssetImage('assets/bg/waifu.jpg'),
                   ),
                 ),
-                Text('Made By'),
-                Text('User'),
+                Spacer(),
+                Padding(
+                    padding: EdgeInsets.only(right: smallPadding),
+                    child: Text(
+                      'UserName',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )),
               ],
             ),
           ),
@@ -114,10 +124,15 @@ class ItemCard extends StatelessWidget {
     return Hero(
       tag: '$id',
       child: Container(
-        width: size.width - 32,
-        height: size.width - 32,
+        width: size.width / 2,
+        height: size.width / 2,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.only(
+            // topLeft: const Radius.circular(15.0),
+            topRight: const Radius.circular(15.0),
+            // bottomLeft: const Radius.circular(15.0),
+            bottomRight: const Radius.circular(15.0),
+          ),
           child: CachedNetworkImage(
             fit: BoxFit.cover,
             imageUrl: imageUrl,
@@ -135,27 +150,24 @@ class ItemCard extends StatelessWidget {
     );
   }
 
-// Widget _buildInfo(BuildContext context) {
-//   return Expanded(
-//     child: Padding(
-//       padding: const EdgeInsets.all(smallPadding),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           Text(
-//             'Title',
-//             style: Theme.of(context).textTheme.headline6,
-//           ),
-//           const SizedBox(height: 4),
-//           Text(
-//             subtitle,
-//             style: Theme.of(context).textTheme.caption,
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
+  Widget _buildInfo(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(smallPadding),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Title',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'this is subtitle about the puzzle ',
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ],
+      ),
+    );
+  }
 }
