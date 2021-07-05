@@ -34,6 +34,7 @@ class PuzzleListState extends State<PuzzleListPage>
 
   /// puzzle listview ScrollController
   static late ScrollController _scrollController;
+  static late bool needLoadMore;
 
   /// last request list length
   /// Judging for loadMore timing
@@ -138,39 +139,49 @@ class PuzzleListState extends State<PuzzleListPage>
               backgroundColor: Theme.of(context).shadowColor,
               color: Theme.of(context).primaryColor,
               onRefresh: () => context.read(puzzleProvider.notifier).refresh(),
-              child: ListView.builder(
-                  controller: _scrollController,
-                  cacheExtent: MediaQuery.of(context).size.height,
-                  itemCount: docs.length + 1,
-                  itemBuilder: (context, i) {
-                    if (i == docs.length) {
-                      if (isLoadMoreError) {
-                        //  ERROR
-                        return _buildNoneWidget(context);
-                      }
+              child: NotificationListener(
+                onNotification: (t) {
+                  if (t is ScrollEndNotification && needLoadMore) {
+                    context.read(puzzleProvider.notifier).loadMore();
+                    needLoadMore = false;
+                  }
+                  return false;
+                },
+                child: ListView.builder(
+                    controller: _scrollController,
+                    cacheExtent: MediaQuery.of(context).size.height,
+                    itemCount: docs.length + 1,
+                    itemBuilder: (context, i) {
+                      if (i == docs.length) {
+                        if (isLoadMoreError) {
+                          //  ERROR
+                          return _buildNoneWidget(context);
+                        }
 
-                      if (isLoadMoreDone) {
+                        if (isLoadMoreDone) {
+                          return Center(
+                            child: Text(''),
+                          );
+                        }
+
+                        if (docs.length < 4) {
+                          return Container();
+                        }
                         return Center(
-                          child: Text(''),
+                          // width: MediaQuery.of(context).size.width,
+                          // padding: EdgeInsets.symmetric(horizontal: mediumPadding),
+                          child: CircularProgressIndicator(
+                            backgroundColor: Theme.of(context).shadowColor,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor),
+                          ),
                         );
                       }
-
-                      if (docs.length < 4) {
-                        return Container();
-                      }
-                      return Center(
-                        // width: MediaQuery.of(context).size.width,
-                        // padding: EdgeInsets.symmetric(horizontal: mediumPadding),
-                        child: CircularProgressIndicator(
-                          backgroundColor: Theme.of(context).shadowColor,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor),
-                        ),
-                      );
-                    }
-                    String id = docs[i].id;
-                    return itemContainer(docs[i]['imageUrl'].toString(), id, i);
-                  }),
+                      String id = docs[i].id;
+                      return itemContainer(
+                          docs[i]['imageUrl'].toString(), id, i);
+                    }),
+              ),
             );
           },
         ),
@@ -216,34 +227,19 @@ class PuzzleListState extends State<PuzzleListPage>
     double maxScroll = _scrollController.position.maxScrollExtent;
     double currentScroll = _scrollController.position.pixels;
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _scrollController.addListener(() {
-        // scrolling
-      });
-      _scrollController.position.isScrollingNotifier.addListener(() {
-        if (!_scrollController.position.isScrollingNotifier.value) {
-          /// if listview scroll stop and scroll distance > maxScroll
-          // stop
-          if (currentScroll > maxScroll &&
-              !context.read(puzzleProvider).isLoading &&
-              _scrollController.position.extentAfter == 0) {
-            context.read(puzzleProvider.notifier).loadMore();
-          }
-        } else {
-          // start
-        }
-      });
-      int temp = (_scrollController.position.extentBefore /
-              (MediaQuery.of(context).size.width / 2))
-          .floor();
+    if (currentScroll > maxScroll &&
+        !context.read(puzzleProvider).isLoading &&
+        _scrollController.position.extentAfter == 0) {
+      needLoadMore = true;
+    }
+    int temp = (_scrollController.position.extentBefore /
+            (MediaQuery.of(context).size.width / 2))
+        .floor();
 
-      if (currentTop != temp) {
-        currentTop = temp;
-        context.read(currentTopProvider).state = currentTop;
-      }
-
-      print('extentBefore : $currentTop');
-    });
+    if (currentTop != temp) {
+      currentTop = temp;
+      context.read(currentTopProvider).state = currentTop;
+    }
   }
 
   @override
