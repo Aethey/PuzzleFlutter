@@ -25,6 +25,7 @@ class PhotoListState extends State<PhotoListPage>
 
   /// photo list ScrollController
   static late ScrollController _scrollController;
+  static late bool needLoadMore;
 
   /// scroll state
   bool isScrollingDown = false;
@@ -158,37 +159,48 @@ class PhotoListState extends State<PhotoListPage>
           // Loading Large
           return _buildLoadingWidget(context);
         }
-        return WaterfallFlow.builder(
-            itemCount: photos.length + 1,
-            controller: _scrollController,
-            cacheExtent: MediaQuery.of(context).size.height * 2,
-            gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 1.0,
-              mainAxisSpacing: 1.0,
-              viewportBuilder: (int firstIndex, int lastIndex) {
-                curLastIndex = lastIndex;
-              },
-              lastChildLayoutTypeBuilder: (index) => index == photos.length
-                  ? LastChildLayoutType.fullCrossAxisExtent
-                  : LastChildLayoutType.none,
-            ),
-            itemBuilder: (BuildContext context, int i) {
-              if (i == photos.length) {
-                if (isLoadMoreDone) {
+        return NotificationListener(
+          onNotification: (t) {
+            if (t is ScrollEndNotification && needLoadMore) {
+              context.read(photoProvider.notifier).loadMore();
+              needLoadMore = false;
+            }
+
+            return false;
+          },
+          child: WaterfallFlow.builder(
+              itemCount: photos.length + 1,
+              controller: _scrollController,
+              cacheExtent: MediaQuery.of(context).size.height * 2,
+              gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 1.0,
+                mainAxisSpacing: 1.0,
+                viewportBuilder: (int firstIndex, int lastIndex) {
+                  curLastIndex = lastIndex;
+                },
+                lastChildLayoutTypeBuilder: (index) => index == photos.length
+                    ? LastChildLayoutType.fullCrossAxisExtent
+                    : LastChildLayoutType.none,
+              ),
+              itemBuilder: (BuildContext context, int i) {
+                if (i == photos.length) {
+                  if (isLoadMoreDone) {
+                    return Center(
+                      child: Text(''),
+                    );
+                  }
                   return Center(
-                    child: Text(''),
+                    child: CircularProgressIndicator(
+                      backgroundColor: Theme.of(context).shadowColor,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
                   );
                 }
-                return Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Theme.of(context).shadowColor,
-                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                  ),
-                );
-              }
-              return PhotoItem(i, photos[i]);
-            });
+                return PhotoItem(i, photos[i]);
+              }),
+        );
       },
     );
   }
@@ -227,25 +239,9 @@ class PhotoListState extends State<PhotoListPage>
     if (currentScroll > maxScroll &&
         !context.read(photoProvider).isLoading &&
         _scrollController.position.extentAfter == 0) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        _scrollController.addListener(() {
-          // scrolling
-        });
-        _scrollController.position.isScrollingNotifier.addListener(() {
-          // stop
-          if (!_scrollController.position.isScrollingNotifier.value) {
-            if (oldLength == context.read(photoProvider).photos!.length) {
-              // judge by current show Last item，
-              if (curLastIndex >=
-                  context.read(photoProvider).photos!.length - 2) {
-                context.read(photoProvider.notifier).loadMore();
-              }
-            }
-          } else {
-            // start
-          }
-        });
-      });
+      if (curLastIndex >= context.read(photoProvider).photos!.length - 2) {
+        needLoadMore = true;
+      }
     }
     // use for hide appBar
     if (_scrollController.position.userScrollDirection ==
